@@ -1,7 +1,7 @@
 # Final programming project
 
-## Casper van Velzen
-## 11030275
+Casper van Velzen
+11030275
 
 # Problem statement
 
