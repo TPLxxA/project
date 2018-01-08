@@ -13,14 +13,19 @@ Visualisations for usage frequency, item and move choice and metagame trends (wh
 ![](doc/sketch.jpg)
 
 ## Main features
-### Minimum viable product is marked with a *
 
-*- Line graph showing percentage of usage from jan 2015 to jun 2017 (the period in which vgc2015 was playable on Pokemon battle simulator Pokemon Showdown).
+### Minimum viable products
+
+- Line graph showing percentage of usage from jan 2015 to jun 2017 (the period in which vgc2015 was playable on Pokemon battle simulator Pokemon Showdown).
+- Pie charts showing item and move usage in selected time period
+- Bar chart of the types of Pokemon with 3% or more usage in the selected time period. Colours indicating good or bad matchups for Landorus-T
+- Dropdown menu to select wheter or not and how data should be weighted (higher ranked players get more influence in the data)
+- Table of top 10 teammates or top something (50?) most used Pokemon
+
+### Random additions
+
 - Mouseover that shows usage stats, like real value and rank (i.e. #1 most used).
-*- Pie charts showing item and move usage in selected time period
-*- Bar chart of the types of Pokemon with 3% or more usage in the selected time period. Colours indicating good or bad matchups for Landorus-T
-*- Dropdown menu to select wheter or not and how data should be weighted (higher ranked players get more influence in the data)
-*- Table of top 10 teammates
+- Make pokemon names in table clickable, so that it takes the user to the Smogon analysis for more info
 
 # Prerequisites
 
