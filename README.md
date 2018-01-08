@@ -1,3 +1,8 @@
+# Final programming project
+
+##Casper van Velzen
+##11030275
+
 # Problem statement
 
 Every year The Pokemon Company international (TPCi) release a new ruleset for official Pokemon tournaments called Video Game Championships (VGC). In every format it is legal (and absurdly stong Pokemon are banned), there is one Pokemon that rises to the top to be called "King of VGC". This is Landorus-Therian. I aim to visualise its usage in the 2015 format, since it is most similar to the 2018 format, in which Landorus-T promises to be very strong again.
@@ -10,7 +15,7 @@ Visualisations for usage frequency, item and move choice and metagame trends (wh
 
 ## Visual sketch
 
-![](doc/sketch.jpg)
+![](doc/sketch2.jpg)
 
 ## Main features
 
