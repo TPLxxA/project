@@ -37,6 +37,7 @@ Visualisations for usage frequency, item and move choice and metagame trends (wh
 ## Data sources
 
 The stats were collected by Antar (https://twitter.com/InfiniteAntar) and are available at http://www.smogon.com/stats/
+I will have to transform this data to a useful json file.
 
 ## External components
 
