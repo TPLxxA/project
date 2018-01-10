@@ -21,16 +21,17 @@ Visualisations for usage frequency, item and move choice and metagame trends (wh
 
 ### Minimum viable products
 
-- Line graph showing percentage of usage from jan 2015 to jun 2017 (the period in which vgc2015 was playable on Pokemon battle simulator Pokemon Showdown).
+- Line graph showing percentage of usage from jan 2015 to dec 2015 (after that, the format isn't played nearly as much, since the 2016 ruleset was playable)
 - Pie charts showing item and move usage in selected time period
 - Bar chart of the types of Pokemon with 3% or more usage in the selected time period. Colours indicating good or bad matchups for Landorus-T
-- Dropdown menu to select wheter or not and how data should be weighted (higher ranked players get more influence in the data)
-- Table of top 10 teammates or top something (50?) most used Pokemon
+- Dropdown menu to select wheter or not and how data should be weighted (lower ranked players get less influence in the data)
+- Table of top 10 most used Pokemon with information on wheter it's a good or bad matchup
 
 ### Random additions
 
 - Mouseover that shows usage stats, like real value and rank (i.e. #1 most used).
 - Make pokemon names in table clickable, so that it takes the user to the Smogon analysis for more info
+- Red line in the line chart when the Pokemon World Championships happened
 
 # Prerequisites
 
