@@ -44,7 +44,7 @@ No other libraries than the standard d3 library are needed for this feature.
 
 ## Table
 
-The same dataset is used as for the bar chart. Based on weight and month a top 15 (probably going with 15) most used pokemon is represented in a table, sorted based on usage. Additional info in the chart: usage percentage (new column), good/bad/neutral matchup for Landorus (row colour), optional: On click on name link to Smogon analysis (battle spot doubles, since there's no vgc15 analysis, but it's the same format. Smogon links are consistent).
+The same dataset is used as for the bar chart. Based on weight and month a top 20 most used pokemon is represented in a table, sorted based on usage. Additional info in the chart: usage percentage (new column), good/bad/neutral matchup for Landorus (row colour), optional: On click on name link to Smogon analysis (battle spot doubles, since there's no vgc15 analysis, but it's the same format. Smogon links are consistent).
 No other libraries than the standard d3 library are needed for this feature, but I don't know how to put in links yet, so I might need something else for that.
 
 # List of d3 plugins
