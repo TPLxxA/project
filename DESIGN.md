@@ -15,7 +15,7 @@ In order to explain some data, I will most likely use data from https://www.poke
 
 # Diagram
 
-![](doc/diagram2.jpg)
+![](doc/diagram.jpg)
 
 # Description of each component
 
