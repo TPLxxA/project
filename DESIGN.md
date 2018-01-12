@@ -51,3 +51,7 @@ No other libraries than the standard d3 library are needed for this feature, but
 
 - d3tip
 - maybe something that helps with hyperlinks
+
+# Code design
+
+Every graph/chart will have its own function, which is called in main on load/ weight change.

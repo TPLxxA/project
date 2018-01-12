@@ -48,6 +48,8 @@ I'm not sure wheter I need any libraries that we haven't already used. I'll prob
 
 http://trainertower.com/usage-stats/ This is the closest visualisation subject-wise, but all data is in table form, which is not what I am aiming for. Besides, I limit my data to one pokemon.
 
+https://3ds.pokemon-gl.com/battle/usum/ Has recent data. Most importantly pie charts for move and item usage. Pie charts can easily become a mess with annotations, and they solved it by putting a list of all the listed moves/items below the pie chart, which is a great idea I'll most likely use.
+
 The planned visualisations are pretty basic (less is more), so other examples of similar visualisations about different subjects can be found anywhere.
 
 ## Hardest parts
