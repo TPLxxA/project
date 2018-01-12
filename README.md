@@ -42,7 +42,9 @@ I will have to transform this data to a useful json file.
 
 ## External components
 
-I'm not sure wheter I need any libraries that we haven't already used. I'll probably need d3tip.
+d3tip
+d3queue
+bootstrap
 
 ## Similar visualisations
 

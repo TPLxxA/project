@@ -35,54 +35,39 @@ window.onload = function() {
 		d3.selectAll(".g")
 			.remove();
 
-	    var svg = d3.select("#linesvg"),
-	    	margin = {top: 10, right: 10, bottom: 16, left: 26},
-	        width = +svg.attr("width") - margin.left - margin.right,
-			height = +svg.attr("height") - margin.top - margin.bottom,
-	    	g = svg.append("g").attr("class", "g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		/*
+		Bug: svg.attr is "100%" due to being variable thanks to bootstrap
+		this means width = NaN, making it incompatible with d3 functions
+		*/
+		var svg = d3.select("#linesvg"),
+    	margin = {top: 30, right: 30, bottom: 30, left: 30},
+        width = +svg.attr("width") - margin.left - margin.right,
+		height = +svg.attr("height") - margin.top - margin.bottom,
+    	g = svg.append("g").attr("class", "g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	    var x = d3.scaleLinear()
-	    	.rangeRound([0, width]);
+    	console.log(svg.attr("width"));
+    	var x = d3.scaleLinear()
+    		.domain([0, 11])
+    		.rangeRound([0, width]);
 
-	    var y = d3.scaleLinear()
-	    	.rangeRound([height, 0]);
+    	var y = d3.scaleLinear()
+    		.rangeRound([height, 0]);
 
-	    // create line
-	    var line = d3.line()
-	    	.x(function(d) { return d.month; })
-	    	.y(function(d) { return d.usage_stats.usage; });
+    	var line = d3.line()
+    	.x(function(d, i) { console.log(i); return i; })
+    	.y(function(d) { console.log(d.usage_stats.usage); return d.usage_stats.usage; });
 
-	    x.domain(d3.extent(data, function(d) { return d.month; }));
-	    y.domain([0, 65]);
+    	svg.append("g")
+		    .attr("class", "x axis")
+		    .attr("transform", "translate(0," + height + ")")
+		    .call(d3.axisBottom(x));
 
-	    g.append("g")
-	    	.attr("transform", "translate(0," + height + ")")
-	    	.call(d3.axisBottom(x)
-	    	.ticks(12)	
-	    	.tickFormat(function(d) { return d; }));
+		svg.append("g")
+		    .attr("class", "y axis")
+		    .call(d3.axisLeft(y));
 
-	      // create y axis
-	      g.append("g")
-	        	.call(d3.axisLeft(y))
-	        .append("text")
-	        	.attr("fill", "#000")
-	        	.attr("font-size", 12)
-	        	.attr("transform", "rotate(-90)")
-	        	.attr("y", 6)
-	        	.attr("dy", "0.71em")
-	        	.attr("text-anchor", "end")
-	        	.text("usage (%)");
+	}
 
-	      // create x axis
-	      g.append("path")
-			.datum(data)
-			.attr("fill", "none")
-			.attr("stroke", "steelblue")
-			.attr("stroke-linejoin", "round")
-			.attr("stroke-linecap", "round")
-			.attr("stroke-width", 1.5)
-			.attr("d", line);
-	    };
 
 	// TODO: add pie charts
 	function pie_chart(data) {
@@ -203,4 +188,4 @@ window.onload = function() {
 		};
 
 	// TODO: add dropdown menu
-	function dropdown() {};
+	function dropdown() { console.log('Hi I am a dropdown menu function, but I currently do not work :/')};
