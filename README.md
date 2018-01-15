@@ -42,9 +42,9 @@ I will have to transform this data to a useful json file.
 
 ## External components
 
-d3tip
-d3queue
-bootstrap
+- d3tip
+- d3queue
+- bootstrap
 
 ## Similar visualisations
 
