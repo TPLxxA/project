@@ -17,43 +17,53 @@ window.onload = function() {
 	// .defer(d3.json, "data/meta_data_1500.json")
 	// .defer(d3.json, "data/meta_data_1630.json")
 	// .defer(d3.json, "data/meta_data_1760.json")
-	.await(data_loaded); 
+	.await(dataLoaded); 
 
 		};
 
-	function data_loaded(error, l0, l1500, l1630, l1760, m0, m1500, m1630, m1760) {
+	function dataLoaded(error, l0, l1500, l1630, l1760, m0, m1500, m1630, m1760) {
 		if (error) throw error;
-		line_graph(l0);
+		lineGraph(l0);
 
-		// bar_chart(m0[0])
+		// barChart(m0[0])
 
 		};
 
 	// TODO: make it actually work
-	function line_graph(data) {
+	function lineGraph(data) {
 		// remove previous line
 		d3.selectAll(".g")
 			.remove();
 
-	    var svg = d3.select("#linesvg"),
-	    	margin = {top: 10, right: 10, bottom: 16, left: 26},
-	        width = +svg.attr("width") - margin.left - margin.right,
-			height = +svg.attr("height") - margin.top - margin.bottom,
-	    	g = svg.append("g").attr("class", "g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		/*
+		Bug: svg.attr is "100%" due to being variable thanks to bootstrap
+		this means width = NaN, making it incompatible with d3 functions
+		Solution: dimensions of bounding box?!?
+		LITERALLY DON'T EVEN TRY TO SOLVE THIS BS
+		*/
+		var svg = d3.select("#linesvg"),
+    	margin = {top: 30, right: 30, bottom: 30, left: 30},
+        bbox = linesvg.width.animVal.value,
+        width = bbox - margin.left - margin.right,
+		height = +svg.attr("height") - margin.top - margin.bottom,
+    	g = svg.append("g").attr("class", "lineg").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	    var x = d3.scaleLinear()
-	    	.rangeRound([0, width]);
 
-	    var y = d3.scaleLinear()
-	    	.rangeRound([height, 0]);
+    	var x = d3.scaleLinear()
+    		.domain(function(d, i) { return d.month; })
+    		.rangeRound([0, width]);
 
-	    // create line
-	    var line = d3.line()
-	    	.x(function(d) { return d.month; })
-	    	.y(function(d) { return d.usage_stats.usage; });
+    	var y = d3.scaleLinear()
+    		.rangeRound([height, 0]);
 
-	    x.domain(d3.extent(data, function(d) { return d.month; }));
-	    y.domain([0, 65]);
+
+		x.domain(d3.extent(data, function(d) { return d.month; }));
+	    y.domain([15, 65]);
+
+    	var line = d3.line()
+    	.x(function(d) { return x(d.month); })
+    	.y(function(d) { return y(d.usage_stats.usage); });
+
 
 	    g.append("g")
 	    	.attr("transform", "translate(0," + height + ")")
@@ -61,31 +71,35 @@ window.onload = function() {
 	    	.ticks(12)	
 	    	.tickFormat(function(d) { return d; }));
 
-	      // create y axis
-	      g.append("g")
-	        	.call(d3.axisLeft(y))
-	        .append("text")
-	        	.attr("fill", "#000")
-	        	.attr("font-size", 12)
-	        	.attr("transform", "rotate(-90)")
-	        	.attr("y", 6)
-	        	.attr("dy", "0.71em")
-	        	.attr("text-anchor", "end")
-	        	.text("usage (%)");
+		// create y axis
+		g.append("g")
+			.call(d3.axisLeft(y))
+		.append("text")
+			.attr("fill", "#000")
+			.attr("font-size", 12)
+			.attr("transform", "rotate(-90)")
+			.attr("y", 6)
+			.attr("dy", "0.71em")
+			.attr("text-anchor", "end")
+			.text("usage (%)");
 
-	      // create x axis
-	      g.append("path")
-			.datum(data)
-			.attr("fill", "none")
-			.attr("stroke", "steelblue")
-			.attr("stroke-linejoin", "round")
-			.attr("stroke-linecap", "round")
-			.attr("stroke-width", 1.5)
-			.attr("d", line);
-	    };
+		// create line
+		d3.selectAll(".lineg")
+			.append("path")
+			.data([data])
+			// .enter()
+			// 	.append("path")
+				.attr("fill", "none")
+				.attr("stroke", "steelblue")
+				.attr("stroke-linejoin", "round")
+				.attr("stroke-linecap", "round")
+				.attr("stroke-width", 1.5 )
+				.attr("d", line);
+	}
+
 
 	// TODO: add pie charts
-	function pie_chart(data) {
+	function pieChart(data) {
 		// clear pie chart
 		d3.selectAll(".g")
 			.remove();
@@ -93,7 +107,7 @@ window.onload = function() {
 
 
 	// TODO: make this work
-	function bar_chart(data) {
+	function barChart(data) {
 		var svg = d3.select("#barsvg"),
 	    margin = {top: 20, right: 20, bottom: 120, left: 40},
 	    width = +svg.attr("width") - margin.left - margin.right,
@@ -203,4 +217,4 @@ window.onload = function() {
 		};
 
 	// TODO: add dropdown menu
-	function dropdown() {};
+	function dropdown() { console.log('Hi I am a dropdown menu function, but I currently do not work :/')};
