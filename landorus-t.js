@@ -29,31 +29,41 @@ window.onload = function() {
 
 		};
 
-	// TODO: make it actually work
 	function line_graph(data) {
 		// remove previous line
 		d3.selectAll(".g")
 			.remove();
 
-	    var svg = d3.select("#linesvg"),
-	    	margin = {top: 10, right: 10, bottom: 16, left: 26},
-	        width = +svg.attr("width") - margin.left - margin.right,
-			height = +svg.attr("height") - margin.top - margin.bottom,
-	    	g = svg.append("g").attr("class", "g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		/*
+		Bug: svg.attr is "100%" due to being variable thanks to bootstrap
+		this means width = NaN, making it incompatible with d3 functions
+		Solution: dimensions of bounding box?!?
+		LITERALLY DON'T EVEN TRY TO SOLVE THIS BS
+		*/
+		var svg = d3.select("#linesvg"),
+    	margin = {top: 30, right: 30, bottom: 30, left: 30},
+        bbox = linesvg.width.animVal.value,
+        width = bbox - margin.left - margin.right,
+		height = +svg.attr("height") - margin.top - margin.bottom,
+    	g = svg.append("g").attr("class", "lineg").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	    var x = d3.scaleLinear()
-	    	.rangeRound([0, width]);
+    	console.log(bbox);
 
-	    var y = d3.scaleLinear()
-	    	.rangeRound([height, 0]);
+    	var x = d3.scaleLinear()
+    		.domain(function(d) { console.log(d.month); return d.month; })
+    		.rangeRound([0, width]);
 
-	    // create line
-	    var line = d3.line()
-	    	.x(function(d) { return d.month; })
-	    	.y(function(d) { return d.usage_stats.usage; });
+    	var y = d3.scaleLinear()
+    		.rangeRound([height, 0]);
 
-	    x.domain(d3.extent(data, function(d) { return d.month; }));
-	    y.domain([0, 65]);
+
+		x.domain(d3.extent(data, function(d) { return d.month; }));
+	    y.domain([15, 65]);
+
+    	var line = d3.line()
+    	.x(function(d) { console.log(d.month); return x(d.month); })
+    	.y(function(d) { console.log(d.usage_stats.usage); return y(d.usage_stats.usage); });
+
 
 	    g.append("g")
 	    	.attr("transform", "translate(0," + height + ")")
@@ -61,28 +71,32 @@ window.onload = function() {
 	    	.ticks(12)	
 	    	.tickFormat(function(d) { return d; }));
 
-	      // create y axis
-	      g.append("g")
-	        	.call(d3.axisLeft(y))
-	        .append("text")
-	        	.attr("fill", "#000")
-	        	.attr("font-size", 12)
-	        	.attr("transform", "rotate(-90)")
-	        	.attr("y", 6)
-	        	.attr("dy", "0.71em")
-	        	.attr("text-anchor", "end")
-	        	.text("usage (%)");
+		// create y axis
+		g.append("g")
+			.call(d3.axisLeft(y))
+		.append("text")
+			.attr("fill", "#000")
+			.attr("font-size", 12)
+			.attr("transform", "rotate(-90)")
+			.attr("y", 6)
+			.attr("dy", "0.71em")
+			.attr("text-anchor", "end")
+			.text("usage (%)");
 
-	      // create x axis
-	      g.append("path")
-			.datum(data)
-			.attr("fill", "none")
-			.attr("stroke", "steelblue")
-			.attr("stroke-linejoin", "round")
-			.attr("stroke-linecap", "round")
-			.attr("stroke-width", 1.5)
-			.attr("d", line);
-	    };
+		console.log(data);
+		// create line
+		d3.selectAll(".lineg")
+			.append("path")
+			.data([data])
+			// .enter()
+			// 	.append("path")
+				.attr("fill", "none")
+				.attr("stroke", "steelblue")
+				.attr("stroke-linejoin", "round")
+				.attr("stroke-linecap", "round")
+				.attr("stroke-width", 1.5 )
+				.attr("d", line);
+	}
 
 	// TODO: add pie charts
 	function pie_chart(data) {
