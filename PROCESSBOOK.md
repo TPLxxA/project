@@ -24,3 +24,10 @@ Done:
 
 To do:
 - Put bars in bar chart
+
+# Thu 18:
+Done:
+- Took 6 hrs to get home
+
+To do:
+- Everything I planned to do
