@@ -22,8 +22,9 @@ window.onload = function() {
 
 function dataLoaded(error, lando0, lando1500, lando1630, lando1760, meta0) {
 	if (error) throw error;
-	lineGraph(lando1500);
-	pieChart(lando1500[0]);
+	lineGraph(lando0);
+	pieChart(lando0[0], "#piesvg1", "moves");
+	pieChart(lando0[0], "#piesvg2", "items");
 	barChart(meta0[0]);
 	table(meta0[0], ["mon", "usage"]);
 }
@@ -91,22 +92,26 @@ function lineGraph(data) {
 }
 
 // TODO: second pie chart
-function pieChart(data) {
-	// clear pie chart
-	d3.selectAll(".pieg")
-		.remove();
+function pieChart(data, chartNr, chartType) {
+	// // clear pie chart
+	// d3.selectAll(".pieg")
+	// 	.remove();
 	
-	var svg = d3.select("#piesvg1"),
+	var svg = d3.select(chartNr),
     width = 350,
     height = 350,
     radius = Math.min(width, height) / 2,
     g = svg.append("g").attr("class", "pieg").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-	var color = d3.scaleOrdinal(["#BF360C", "#D84315", "#E64A19", "#F4511E", "#FF5722", "#FF7043", "#FF8A65", "#FFAB91", "#FFCCBC"]);
-
+    if (chartType == "moves") {
+		var color = d3.scaleOrdinal(["#BF360C", "#D84315", "#E64A19", "#F4511E", "#FF5722", "#FF7043", "#FF8A65", "#FFAB91", "#FFCCBC"]);
+	}
+	else {
+		var color = d3.scaleOrdinal(["#0D47A1", "#1565C0", "#1976D2", "#1E88E5", "#2196F3", "#42A5F5", "#64B5F6", "#90CAF9", "#BBDEFB"]);
+	}
 	var pie = d3.pie()
 	    .sort(null)
-	    .value(function(d) { return data['moves'][d]; });
+	    .value(function(d) { return data[chartType][d]; });
 
 	var path = d3.arc()
 	    .outerRadius(radius - 10)
@@ -117,7 +122,7 @@ function pieChart(data) {
 	    .innerRadius(radius - 40);
 
 	var arc = g.selectAll(".arc")
-		.data(pie(Object.keys(data['moves'])))
+		.data(pie(Object.keys(data[chartType])))
 		.enter().append("g")
 	    	.attr("class", "arc");
 
@@ -128,7 +133,7 @@ function pieChart(data) {
 	arc.append("text")
 		.attr("transform", function(d) { return "translate(" + label.centroid(d) + ")"; })
 		.attr("dy", "0.35em")
-		.text(function(d, i) { var move = Object.keys(data['moves']); return move[i]; });
+		.text(function(d, i) { var move = Object.keys(data[chartType]); return move[i]; });
 }
 
 function barChart(data) {
@@ -181,6 +186,7 @@ function barChart(data) {
 		.attr("class", "bar")
 		.attr("x", function(d) { return x(d.type); })
 		.attr("y", function(d) { return y(d.frequency); })
+		.attr("fill", function(d) { return pickColor(d.type);})
 		.attr("width", x.bandwidth())
 		.attr("height", function(d) { return height - y(d.frequency); });
 }
@@ -213,13 +219,13 @@ function table(data, columns) {
 	  	})
 		.enter()
 		.append('td')
-	    	.text(function (d) { console.log(d); return d.value; });
+	    	.text(function (d) { return d.value; });
 
 	return table;
 }
 
 // TODO: add dropdown menu
-function dropdown() { console.log("Hi I am a dropdown menu function, but I currently do not work :/");
+function dropdown() { console.log("HELP");
 }
 
 function countTypes(data) {
@@ -242,4 +248,15 @@ function countTypes(data) {
 	}
 
 	return typedata
+}
+
+function pickColor(type) {
+	var color = "blue";
+	switch (type) {
+		case "bug" || "electric":
+			color = "green";
+			break;
+	}
+
+	return color;
 }
