@@ -41,15 +41,21 @@ To do:
 
 # Mon 22:
 Current issues:
-- !!!!!!!!! Cannot listen for bootstrap dropdown click event, meaning I can't update the data
-- !!!!!!! Table won't appear (but probably works under the hood)
 - Selecting month via line chart is counterintuitive, should use dropdown or slider instead
 - Text in pie charts is ugly, should fix with tooltip
-- x axis on line chart should display months, but doesn't yet
+- dropdown cannot access data from dataLoaded, meaning graphs cannot be updated
+- dropdown function has a lot of repetition (purely stylistic)
+- Pie charts won't update (bar + table not tested)
 
 Fixed issues:
 - None of the graphs have legends yet.
--- Opted to only make legend for bar chart, as I felt like the other graphs didn't need one (maybe pie chart but in a different format than the traditional legend)
+	Opted to only make legend for bar chart, as I felt like the other graphs didn't need one (maybe pie chart but in a different format than the traditional legend)
+- x axis on line chart should display months, but doesn't yet.
+	x axis now displays months
+- Table won't appear (but probably works under the hood).
+	Changed svg to div, since tables are html, not d3. Still ugly
+- Cannot listen for bootstrap dropdown click event, meaning I can't update the data
+	Can now select ranking weight, just have to update data now
 
 Done: 
 - Made github pages

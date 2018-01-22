@@ -5,6 +5,9 @@ Minor Programmeren / Final Project
 Shows statistics on Landorus-Therian and the metagame in VGC 2015
 */
 
+// global variables
+var selectedMonth, lando0, lando1500, lando1630, lando1760, meta0;
+
 window.onload = function() {
 	// load all datasets
 	d3.queue()
@@ -20,14 +23,25 @@ window.onload = function() {
 
 	};
 
-function dataLoaded(error, lando0, lando1500, lando1630, lando1760, meta0) {
+function dataLoaded(error, landoData0, landoData1500, landoData1630, landoData1760, metaData0) {
 	if (error) throw error;
+
+	// assign data to globals
+	selectedMonth = 0;
+	lando0 = landoData0;
+	lando1500 = landoData1500;
+	lando1630 = landoData1630;
+	lando1760 = landoData1760;
+	meta0 = metaData0;
+
+	// initial creation of all graphs
 	lineGraph(lando0);
-	pieChart(lando0[0], "#piesvg1", "moves");
-	pieChart(lando0[0], "#piesvg2", "items");
-	barChart(meta0[0]);
-	table(meta0[0], ["mon", "usage"]);
-}
+	pieChart(lando0[selectedMonth], 1, "moves");
+	pieChart(lando0[selectedMonth], 2, "items");
+	barChart(meta0[selectedMonth]);
+	table(metaData0[selectedMonth], ["mon", "usage"]);
+	dropdown(selectedMonth);
+};
 
 function lineGraph(data) {
 	// remove previous line
@@ -45,7 +59,8 @@ function lineGraph(data) {
     bbox = linesvg.width.animVal.value,
     width = bbox - margin.left - margin.right,
 	height = +svg.attr("height") - margin.top - margin.bottom,
-	g = svg.append("g").attr("class", "lineg").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	g = svg.append("g").attr("class", "lineg").attr("transform", "translate(" + margin.left + "," + margin.top + ")"),
+	monthList = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
 
 	var x = d3.scaleLinear()
 		.domain(function(d) { return d.month; })
@@ -65,7 +80,7 @@ function lineGraph(data) {
     	.attr("transform", "translate(0," + height + ")")
     	.call(d3.axisBottom(x)
     	.ticks(12)	
-    	.tickFormat(function(d) { return d; }));
+    	.tickFormat(function(d, i) { return monthList[i]; }));
 
 	// create y axis
 	g.append("g")
@@ -89,18 +104,18 @@ function lineGraph(data) {
 			.attr("stroke-linecap", "round")
 			.attr("stroke-width", 1.5 )
 			.attr("d", line);
-}
+};
 
 function pieChart(data, chartNr, chartType) {
-	// // clear pie chart
-	// d3.selectAll(".pieg")
-	// 	.remove();
+	// clear pie chart
+	d3.selectAll(".pieg" + chartNr)
+		.remove();
 	
-	var svg = d3.select(chartNr),
+	var svg = d3.select("#piesvg" + chartNr),
     width = 350,
     height = 350,
     radius = Math.min(width, height) / 2,
-    g = svg.append("g").attr("class", "pieg").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+    g = svg.append("g").attr("class", "pieg" + chartNr).attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
     if (chartType == "moves") {
 		var color = d3.scaleOrdinal(["#BF360C", "#D84315", "#E64A19", "#F4511E", "#FF5722", "#FF7043", "#FF8A65", "#FFAB91", "#FFCCBC"]);
@@ -133,7 +148,7 @@ function pieChart(data, chartNr, chartType) {
 		.attr("transform", function(d) { return "translate(" + label.centroid(d) + ")"; })
 		.attr("dy", "0.35em")
 		.text(function(d, i) { var value = Object.keys(data[chartType]); return value[i]; });
-}
+};
 
 function barChart(data) {
 	// count most common types
@@ -210,7 +225,7 @@ function barChart(data) {
         .attr("y", 9.5)
         .attr("dy", "0.32em")
         .text(function(d, i) { return legendText[i] });
-}
+};
 
 function table(data, columns) {	
 	var table = d3.select('#tablesvg').append('table'),
@@ -243,6 +258,34 @@ function table(data, columns) {
 	    	.text(function (d) { return d.value; });
 
 	return table;
+};
+
+function dropdown(selectedMonth) {
+	$('.dropdown-menu li a').click(function(){
+		
+		$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+
+		if ($(this).attr("data-value") == "0") {
+			lineGraph(lando0);
+			pieChart(lando0[selectedMonth], "#piesvg1", "moves");
+			pieChart(lando0[selectedMonth], "#piesvg2", "items");
+		} 
+		else if ($(this).attr("data-value") == "1500") {
+			lineGraph(lando1500);
+			pieChart(lando1500[selectedMonth], "#piesvg1", "moves");
+			pieChart(lando1500[selectedMonth], "#piesvg2", "items");
+		} 
+		else if ($(this).attr("data-value") == "1630") {
+			lineGraph(lando1630);
+			pieChart(lando1630[selectedMonth], "#piesvg1", "moves");
+			pieChart(lando1630[selectedMonth], "#piesvg2", "items");
+		} 
+		else if ($(this).attr("data-value") == "1760") {
+			lineGraph(lando1760);
+			pieChart(lando1760[selectedMonth], "#piesvg1", "moves");
+			pieChart(lando1760[selectedMonth], "#piesvg2", "items");
+		}
+	});
 }
 
 function countTypes(data) {
@@ -265,7 +308,7 @@ function countTypes(data) {
 	}
 
 	return typedata
-}
+};
 
 function pickColor(type) {
 	var color = "blue";
@@ -288,4 +331,4 @@ function pickColor(type) {
 	}
 
 	return color;
-}
+};
