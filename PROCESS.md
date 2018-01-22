@@ -39,3 +39,14 @@ Done:
 To do:
 - Make table appear
 
+# Mon 22:
+Current issues:
+- Cannot listen for bootstrap dropdown click event, meaning I can't update the data
+- Table won't appear (but probably works under the hood)
+- Selecting month via line chart is counterintuitive, should use dropdown or slider instead
+- Text in pie charts is ugly, should fix with tooltip
+- None of the graphs have legends yet
+
+Done: 
+- Made github pages
+- Added colors to bar chart corresponding to matchup vs. Landorus-T

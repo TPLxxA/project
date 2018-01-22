@@ -133,7 +133,7 @@ function pieChart(data, chartNr, chartType) {
 	arc.append("text")
 		.attr("transform", function(d) { return "translate(" + label.centroid(d) + ")"; })
 		.attr("dy", "0.35em")
-		.text(function(d, i) { var move = Object.keys(data[chartType]); return move[i]; });
+		.text(function(d, i) { var value = Object.keys(data[chartType]); return value[i]; });
 }
 
 function barChart(data) {
@@ -179,7 +179,7 @@ function barChart(data) {
 		.attr("class", "bar")
 		.attr("x", function(d) { return x(d.type); })
 		.attr("y", function(d) { return y(d.frequency); })
-		.style("fill", function(d) { var color = pickColor(d.type); console.log(color); return color })
+		.style("fill", function(d) { var color = pickColor(d.type); return color })
 		.attr("width", x.bandwidth())
 		.attr("height", function(d) { return height - y(d.frequency); });
 }
