@@ -91,7 +91,6 @@ function lineGraph(data) {
 			.attr("d", line);
 }
 
-// TODO: second pie chart
 function pieChart(data, chartNr, chartType) {
 	// // clear pie chart
 	// d3.selectAll(".pieg")
@@ -182,6 +181,35 @@ function barChart(data) {
 		.style("fill", function(d) { var color = pickColor(d.type); return color })
 		.attr("width", x.bandwidth())
 		.attr("height", function(d) { return height - y(d.frequency); });
+
+	var legendColor = d3.scaleOrdinal()
+		.range(["green", "blue", "orange", "red"]);
+
+	var legendText = ["good matchup", "neutral matchup", "bad matchup", "very bad matchup"];
+
+	// create legend
+    var legend = g.append("g")
+		.attr("font-family", "sans-serif")
+		.attr("font-size", 10)
+		.attr("text-anchor", "end")
+		.attr("class", "barlegend")
+	.selectAll(".barlegendg")
+	.data(legendText)
+	.enter().append("g")
+		.attr("class", "barlegendbox")
+		.attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+    legend.append("rect")
+        .attr("x", width - 19)
+        .attr("width", 19)
+        .attr("height", 19)
+        .attr("fill", legendColor);
+
+    legend.append("text")
+        .attr("x", width - 24)
+        .attr("y", 9.5)
+        .attr("dy", "0.32em")
+        .text(function(d, i) { return legendText[i] });
 }
 
 function table(data, columns) {	
@@ -215,10 +243,6 @@ function table(data, columns) {
 	    	.text(function (d) { return d.value; });
 
 	return table;
-}
-
-// TODO: add dropdown menu
-function dropdown() { console.log("HELP");
 }
 
 function countTypes(data) {
