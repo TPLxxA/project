@@ -3,6 +3,10 @@
 Casper van Velzen
 11030275
 
+# Github pages
+
+https://tplxxa.github.io/project/
+
 # Problem statement
 
 Every year The Pokemon Company international (TPCi) release a new ruleset for official Pokemon tournaments called Video Game Championships (VGC). In every format it is legal (and absurdly stong Pokemon are banned), there is one Pokemon that rises to the top to be called "King of VGC". This is Landorus-Therian. I aim to visualise its usage in the 2015 format, since it is most similar to the 2018 format, in which Landorus-T promises to be very strong again.

@@ -155,13 +155,6 @@ function barChart(data) {
 		.attr("class", "barg")
 	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	// // Bostock data, remove when done with bar
-	// d3.tsv("data.tsv", function(d) {
-	//   d.frequency = +d.frequency;
-	//   return d;
-	// }, function(error, data) {
-	//   if (error) throw error;
-
 	x.domain(typelist.map(function(d) { return d; }));
 	y.domain([0, 6]);
 
@@ -186,7 +179,7 @@ function barChart(data) {
 		.attr("class", "bar")
 		.attr("x", function(d) { return x(d.type); })
 		.attr("y", function(d) { return y(d.frequency); })
-		.attr("fill", function(d) { return pickColor(d.type);})
+		.style("fill", function(d) { var color = pickColor(d.type); console.log(color); return color })
 		.attr("width", x.bandwidth())
 		.attr("height", function(d) { return height - y(d.frequency); });
 }
@@ -253,8 +246,20 @@ function countTypes(data) {
 function pickColor(type) {
 	var color = "blue";
 	switch (type) {
-		case "bug" || "electric":
+		case "bug":
+		case "electric":
+		case "fighting":
+		case "fire":
+		case "poison":
+		case "rock":
+		case "steel":
 			color = "green";
+			break;
+		case "water":
+			color = "orange";
+			break;
+		case "ice":
+			color = "red";
 			break;
 	}
 

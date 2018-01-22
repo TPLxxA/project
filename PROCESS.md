@@ -31,3 +31,11 @@ Done:
 
 To do:
 - Everything I planned to do
+
+# Fri 19:
+Done:
+- Made all visualisations work under the hood
+
+To do:
+- Make table appear
+
