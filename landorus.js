@@ -6,7 +6,9 @@ Shows statistics on Landorus-Therian and the metagame in VGC 2015
 */
 
 // global variables
-var selectedMonth, lando0, lando1500, lando1630, lando1760, meta0;
+var currentWeight, selectedMonth, lando0, lando1500, lando1630, lando1760, meta0;
+var monthList = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+
 
 window.onload = function() {
 	// load all datasets
@@ -28,6 +30,7 @@ function dataLoaded(error, landoData0, landoData1500, landoData1630, landoData17
 
 	// assign data to globals
 	selectedMonth = 0;
+	currentWeight = "0"
 	lando0 = landoData0;
 	lando1500 = landoData1500;
 	lando1630 = landoData1630;
@@ -35,12 +38,11 @@ function dataLoaded(error, landoData0, landoData1500, landoData1630, landoData17
 	meta0 = metaData0;
 
 	// initial creation of all graphs
-	lineGraph(lando0);
-	pieChart(lando0[selectedMonth], 1, "moves");
-	pieChart(lando0[selectedMonth], 2, "items");
+	loadCharts(currentWeight, selectedMonth);
 	barChart(meta0[selectedMonth]);
-	table(metaData0[selectedMonth], ["mon", "usage"]);
+	table(metaData0[selectedMonth], ["mon", "usage"], "#usagetablediv");
 	dropdown(selectedMonth);
+	slider();
 };
 
 function lineGraph(data) {
@@ -59,8 +61,7 @@ function lineGraph(data) {
     bbox = linesvg.width.animVal.value,
     width = bbox - margin.left - margin.right,
 	height = +svg.attr("height") - margin.top - margin.bottom,
-	g = svg.append("g").attr("class", "lineg").attr("transform", "translate(" + margin.left + "," + margin.top + ")"),
-	monthList = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+	g = svg.append("g").attr("class", "lineg").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 	var x = d3.scaleLinear()
 		.domain(function(d) { return d.month; })
@@ -166,6 +167,9 @@ function pieChart(data, chartNr, chartType) {
 		.attr("transform", function(d) { return "translate(" + label.centroid(d) + ")"; })
 		.attr("dy", "0.35em")
 		.text(function(d, i) { var value = Object.keys(data[chartType]); return value[i]; });
+
+	console.log(data);
+	table(data[chartType], [chartType, "usage"], "#pietablediv" + chartNr);
 };
 
 function barChart(data) {
@@ -245,26 +249,24 @@ function barChart(data) {
         .text(function(d, i) { return legendText[i] });
 };
 
-function table(data, columns) {	
-	var table = d3.select('#tablesvg').append('table'),
+function table(data, columns, div) {	
+	var table = d3.select(div).append('table'),
 	thead = table.append('thead'),
 	tbody = table.append('tbody');
 
-	// append the header row
+	console.log(data);
+
 	thead.append('tr')
 		.selectAll('th')
 		.data(columns).enter()
 		.append('th')
 			.text(function (column) { return column; });
 
-	// create a row for each object in the data
 	var rows = tbody.selectAll('tr')
 		.data(data)
 		.enter()
 		.append('tr');
 
-	// This doesn't get called and that's a problem I think
-	// create a cell in each row for each column
 	var cells = rows.selectAll('td')
 		.data(function (row) {
 	    	return columns.map(function (column) {
@@ -285,28 +287,60 @@ function dropdown(selectedMonth) {
 
 		switch ($(this).attr("data-value")) {
 			case "0":
-				lineGraph(lando0);
-				pieChart(lando0[selectedMonth], 1, "moves");
-				pieChart(lando0[selectedMonth], 2, "items");
+				currentWeight = "0";
 				break;
 			case "1500":
-				lineGraph(lando1500);
-				pieChart(lando1500[selectedMonth], 1, "moves");
-				pieChart(lando1500[selectedMonth], 2, "items");
+				currentWeight = "1500";
 				break;
 			case "1630":
-				lineGraph(lando1630);
-				pieChart(lando1630[selectedMonth], 1, "moves");
-				pieChart(lando1630[selectedMonth], 2, "items");
+				currentWeight = "1630";
 				break;
 			case "1760":
-				lineGraph(lando1760);
-				pieChart(lando1760[selectedMonth], 1, "moves");
-				pieChart(lando1760[selectedMonth], 2, "items");
+				currentWeight = "1760";
 				break;
 		}
+		loadCharts(currentWeight, selectedMonth);
 	});
 }
+
+function slider() {
+	var slider = document.getElementById("range");
+	var output = document.getElementById("month");
+	output.innerHTML = monthList[0];
+
+	// Update the current slider value (each time you drag the slider handle)
+	slider.oninput = function() {
+	    output.innerHTML = monthList[this.value];
+
+	    selectedMonth = this.value;
+	    loadCharts(currentWeight, selectedMonth);
+	}
+};
+
+function loadCharts(weight, selectedMonth) {
+	switch (weight) {
+	case "0":
+		lineGraph(lando0);
+		pieChart(lando0[selectedMonth], 1, "moves");
+		pieChart(lando0[selectedMonth], 2, "items");
+		break;
+	case "1500":
+		lineGraph(lando1500);
+		pieChart(lando1500[selectedMonth], 1, "moves");
+		pieChart(lando1500[selectedMonth], 2, "items");
+		break;
+	case "1630":
+		lineGraph(lando1630);
+		pieChart(lando1630[selectedMonth], 1, "moves");
+		pieChart(lando1630[selectedMonth], 2, "items");
+		break;
+	case "1760":
+		lineGraph(lando1760);
+		pieChart(lando1760[selectedMonth], 1, "moves");
+		pieChart(lando1760[selectedMonth], 2, "items");
+		break;
+	}
+};
 
 function countTypes(data) {
 	var typedata = [{"type": "bug", "frequency": 0}, {"type": "dark", "frequency": 0}, {"type": "dragon", "frequency": 0},

@@ -59,10 +59,16 @@ Done:
 
 # Tue 23:
 Current issues:
-- Selecting month via line chart is counterintuitive, should use dropdown or slider instead
 - Text in pie charts is ugly, should fix with tooltip + legend of some sort
-- dropdown function has a lot of repetition (purely stylistic)
 - Not all files have headers
+- Loadcharts doesn't load all charts yet, as not all data are there
+- Table listing moves/items under pie charts are broken
 
 Fixed issues:
 - Pie charts won't update (bar + table not tested): passed correct arguments upon dropdown selection, now works
+- dropdown function has a lot of repetition (purely stylistic): fixed by adding loadcharts function
+- Selecting month via line chart is counterintuitive, should use dropdown or slider instead: fixed by adding slider
+
+
+Done:
+- Added loadCharts function so that both dropdown and slider can access it to load the correct charts
