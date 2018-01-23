@@ -60,6 +60,9 @@ Done:
 # Tue 23:
 Current issues:
 - Selecting month via line chart is counterintuitive, should use dropdown or slider instead
-- Text in pie charts is ugly, should fix with tooltip
+- Text in pie charts is ugly, should fix with tooltip + legend of some sort
 - dropdown function has a lot of repetition (purely stylistic)
-- Pie charts won't update (bar + table not tested)
+- Not all files have headers
+
+Fixed issues:
+- Pie charts won't update (bar + table not tested): passed correct arguments upon dropdown selection, now works

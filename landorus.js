@@ -123,6 +123,11 @@ function pieChart(data, chartNr, chartType) {
 	else {
 		var color = d3.scaleOrdinal(["#0D47A1", "#1565C0", "#1976D2", "#1E88E5", "#2196F3", "#42A5F5", "#64B5F6", "#90CAF9", "#BBDEFB"]);
 	}
+
+	var tip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
 	var pie = d3.pie()
 	    .sort(null)
 	    .value(function(d) { return data[chartType][d]; });
@@ -142,7 +147,20 @@ function pieChart(data, chartNr, chartType) {
 
 	arc.append("path")
 	    .attr("d", path)
-	    .attr("fill", function(d, i) { return color(i); });
+	    .attr("fill", function(d, i) { return color(i); })
+	    .on("mouseover", function(d) {
+	    	tip.transition()
+				.duration(200)
+				.style("opacity", .9);
+			tip.html(d.data + "<br/>" + d.value + "%")
+				.style("left", (d3.event.pageX) + "px")
+				.style("top", (d3.event.pageY - 28) + "px");
+       })
+	    .on("mouseout", function(d) {
+			tip.transition()
+				.duration(500)
+				.style("opacity", 0);
+       });
 
 	arc.append("text")
 		.attr("transform", function(d) { return "translate(" + label.centroid(d) + ")"; })
@@ -265,25 +283,27 @@ function dropdown(selectedMonth) {
 		
 		$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
 
-		if ($(this).attr("data-value") == "0") {
-			lineGraph(lando0);
-			pieChart(lando0[selectedMonth], "#piesvg1", "moves");
-			pieChart(lando0[selectedMonth], "#piesvg2", "items");
-		} 
-		else if ($(this).attr("data-value") == "1500") {
-			lineGraph(lando1500);
-			pieChart(lando1500[selectedMonth], "#piesvg1", "moves");
-			pieChart(lando1500[selectedMonth], "#piesvg2", "items");
-		} 
-		else if ($(this).attr("data-value") == "1630") {
-			lineGraph(lando1630);
-			pieChart(lando1630[selectedMonth], "#piesvg1", "moves");
-			pieChart(lando1630[selectedMonth], "#piesvg2", "items");
-		} 
-		else if ($(this).attr("data-value") == "1760") {
-			lineGraph(lando1760);
-			pieChart(lando1760[selectedMonth], "#piesvg1", "moves");
-			pieChart(lando1760[selectedMonth], "#piesvg2", "items");
+		switch ($(this).attr("data-value")) {
+			case "0":
+				lineGraph(lando0);
+				pieChart(lando0[selectedMonth], 1, "moves");
+				pieChart(lando0[selectedMonth], 2, "items");
+				break;
+			case "1500":
+				lineGraph(lando1500);
+				pieChart(lando1500[selectedMonth], 1, "moves");
+				pieChart(lando1500[selectedMonth], 2, "items");
+				break;
+			case "1630":
+				lineGraph(lando1630);
+				pieChart(lando1630[selectedMonth], 1, "moves");
+				pieChart(lando1630[selectedMonth], 2, "items");
+				break;
+			case "1760":
+				lineGraph(lando1760);
+				pieChart(lando1760[selectedMonth], 1, "moves");
+				pieChart(lando1760[selectedMonth], 2, "items");
+				break;
 		}
 	});
 }
