@@ -72,3 +72,24 @@ Fixed issues:
 
 Done:
 - Added loadCharts function so that both dropdown and slider can access it to load the correct charts
+
+# Wed 24:
+Current functional issues:
+- Loadcharts doesn't load all charts yet, as not all data are there
+- There is no interactivity between the pie charts and the tables under them
+- The tooltip on the pie charts do not follow the mouse
+
+Current stylistic issues
+- Move and item data is formatted differently than Metagame data, meaning I can't use the same function for both tables
+- pieTable function is ugly as hell
+- New tooltips get created every time the slider is used
+- Not all files have headers
+
+Fixed issues:
+- Tables duplicate when updated: identified the right elements to delete upon calling table function
+- Text in pie charts is ugly, should fix with tooltip + legend of some sort: added tooltip + table, but there is little interactivity
+- Table listing moves/items under pie charts are broken: they work, but there is little interactivity
+
+Added:
+- meta_data_1500 dataset
+- Loadtable function now also loads metagame data

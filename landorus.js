@@ -6,11 +6,12 @@ Shows statistics on Landorus-Therian and the metagame in VGC 2015
 */
 
 // global variables
-var currentWeight, selectedMonth, lando0, lando1500, lando1630, lando1760, meta0;
+var currentWeight, selectedMonth, lando0, lando1500, lando1630, lando1760, meta0, meta1500;
 var monthList = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
 
 
 window.onload = function() {
+
 	// load all datasets
 	d3.queue()
 	.defer(d3.json, "data/Lando_data_0.json")
@@ -18,29 +19,28 @@ window.onload = function() {
 	.defer(d3.json, "data/Lando_data_1630.json")
 	.defer(d3.json, "data/Lando_data_1760.json")
 	.defer(d3.json, "data/meta_data_0.json")
-	// .defer(d3.json, "data/meta_data_1500.json")
+	.defer(d3.json, "data/meta_data_1500.json")
 	// .defer(d3.json, "data/meta_data_1630.json")
 	// .defer(d3.json, "data/meta_data_1760.json")
 	.await(dataLoaded); 
 
 	};
 
-function dataLoaded(error, landoData0, landoData1500, landoData1630, landoData1760, metaData0) {
+function dataLoaded(error, landoData0, landoData1500, landoData1630, landoData1760, metaData0, metaData1500) {
 	if (error) throw error;
 
 	// assign data to globals
 	selectedMonth = 0;
-	currentWeight = "0"
+	currentWeight = "0";
 	lando0 = landoData0;
 	lando1500 = landoData1500;
 	lando1630 = landoData1630;
 	lando1760 = landoData1760;
 	meta0 = metaData0;
+	meta1500 = metaData1500;
 
 	// initial creation of all graphs
 	loadCharts(currentWeight, selectedMonth);
-	barChart(meta0[selectedMonth]);
-	table(metaData0[selectedMonth], ["mon", "usage"], "#usagetablediv");
 	dropdown(selectedMonth);
 	slider();
 };
@@ -163,16 +163,14 @@ function pieChart(data, chartNr, chartType) {
 				.style("opacity", 0);
        });
 
-	arc.append("text")
-		.attr("transform", function(d) { return "translate(" + label.centroid(d) + ")"; })
-		.attr("dy", "0.35em")
-		.text(function(d, i) { var value = Object.keys(data[chartType]); return value[i]; });
-
-	console.log(data);
-	table(data[chartType], [chartType, "usage"], "#pietablediv" + chartNr);
+	pieTable(data[chartType], [chartType, "usage"], chartNr, chartType);
 };
 
 function barChart(data) {
+	// clear pie chart
+	d3.selectAll(".barg")
+		.remove();
+
 	// count most common types
 	var typedata = countTypes(data),
 	typelist = ["bug", "dark", "dragon", "electric", "fairy", "fighting", "fire",
@@ -249,12 +247,15 @@ function barChart(data) {
         .text(function(d, i) { return legendText[i] });
 };
 
-function table(data, columns, div) {	
-	var table = d3.select(div).append('table'),
-	thead = table.append('thead'),
-	tbody = table.append('tbody');
+function usageTable(data, columns) {
+	d3.selectAll(".usagethead")
+		.remove();
+	d3.selectAll(".usagetbody")
+		.remove();
 
-	console.log(data);
+	var table = d3.select("#usagetablediv").append('table'),
+	thead = table.append('thead').attr("class", "usagethead"),
+	tbody = table.append('tbody').attr("class", "usagetbody");
 
 	thead.append('tr')
 		.selectAll('th')
@@ -266,6 +267,52 @@ function table(data, columns, div) {
 		.data(data)
 		.enter()
 		.append('tr');
+
+	var cells = rows.selectAll('td')
+		.data(function (row) {
+	    	return columns.map(function (column) {
+	      		return {column: column, value: row[column]};
+	    	});
+	  	})
+		.enter()
+		.append('td')
+	    	.text(function (d) { return d.value; });
+
+	return table;
+};
+
+function pieTable(data, columns, chartNr, chartType) {
+	d3.selectAll(".piethead" + chartNr)
+		.remove();
+	d3.selectAll(".pietbody" + chartNr)
+		.remove();
+
+	var pieData = [],
+	index = 0;
+	for (var key in data) {
+		if (chartType == "moves") {
+			pieData[index] = {moves: key, usage: data[key]};
+		}
+		else {
+			pieData[index] = {items: key, usage: data[key]};
+		};
+		index += 1;
+	};
+
+	var table = d3.select("#pietablediv" + chartNr).append('table'),
+	thead = table.append('thead').attr("class", "piethead" + chartNr),
+	tbody = table.append('tbody').attr("class", "pietbody" + chartNr);
+
+	thead.append('tr')
+		.selectAll('th')
+		.data(columns).enter()
+		.append('th')
+			.text(function (column) { return column; });
+
+	var rows = tbody.selectAll('tr')
+		.data(pieData)
+		.enter()
+		.append('tr')
 
 	var cells = rows.selectAll('td')
 		.data(function (row) {
@@ -323,21 +370,29 @@ function loadCharts(weight, selectedMonth) {
 		lineGraph(lando0);
 		pieChart(lando0[selectedMonth], 1, "moves");
 		pieChart(lando0[selectedMonth], 2, "items");
+		barChart(meta0[selectedMonth]);
+		usageTable(meta0[selectedMonth], ["mon", "usage"]);
 		break;
 	case "1500":
 		lineGraph(lando1500);
 		pieChart(lando1500[selectedMonth], 1, "moves");
 		pieChart(lando1500[selectedMonth], 2, "items");
+		barChart(meta1500[selectedMonth]);
+		usageTable(meta1500[selectedMonth], ["mon", "usage"]);
 		break;
 	case "1630":
 		lineGraph(lando1630);
 		pieChart(lando1630[selectedMonth], 1, "moves");
 		pieChart(lando1630[selectedMonth], 2, "items");
+		barChart(meta0[selectedMonth]);
+		usageTable(meta0[selectedMonth], ["mon", "usage"]);
 		break;
 	case "1760":
 		lineGraph(lando1760);
 		pieChart(lando1760[selectedMonth], 1, "moves");
 		pieChart(lando1760[selectedMonth], 2, "items");
+		barChart(meta0[selectedMonth]);
+		usageTable(meta0[selectedMonth], ["mon", "usage"]);
 		break;
 	}
 };

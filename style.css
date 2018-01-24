@@ -11,6 +11,10 @@
   pointer-events: none;
 }
 
+path:hover {
+  opacity: 0.55;
+}
+
 .slidecontainer {
   width: 100%;
 }
