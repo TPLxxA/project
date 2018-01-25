@@ -11,6 +11,10 @@
   pointer-events: none;
 }
 
+td {
+  background-color: white;
+}
+
 path:hover {
   opacity: 0.55;
 }

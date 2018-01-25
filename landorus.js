@@ -6,7 +6,7 @@ Shows statistics on Landorus-Therian and the metagame in VGC 2015
 */
 
 // global variables
-var currentWeight, selectedMonth, lando0, lando1500, lando1630, lando1760, meta0, meta1500;
+var currentWeight, selectedMonth, lando0, lando1500, lando1630, lando1760, meta0, meta1500, meta1630, meta1760;
 var monthList = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
 
 
@@ -20,13 +20,13 @@ window.onload = function() {
 	.defer(d3.json, "data/Lando_data_1760.json")
 	.defer(d3.json, "data/meta_data_0.json")
 	.defer(d3.json, "data/meta_data_1500.json")
-	// .defer(d3.json, "data/meta_data_1630.json")
-	// .defer(d3.json, "data/meta_data_1760.json")
+	.defer(d3.json, "data/meta_data_1630.json")
+	.defer(d3.json, "data/meta_data_1760.json")
 	.await(dataLoaded); 
 
 	};
 
-function dataLoaded(error, landoData0, landoData1500, landoData1630, landoData1760, metaData0, metaData1500) {
+function dataLoaded(error, landoData0, landoData1500, landoData1630, landoData1760, metaData0, metaData1500, metaData1630, metaData1760) {
 	if (error) throw error;
 
 	// assign data to globals
@@ -38,6 +38,8 @@ function dataLoaded(error, landoData0, landoData1500, landoData1630, landoData17
 	lando1760 = landoData1760;
 	meta0 = metaData0;
 	meta1500 = metaData1500;
+	meta1630 = metaData1630;
+	meta1760 = metaData1760;
 
 	// initial creation of all graphs
 	loadCharts(currentWeight, selectedMonth);
@@ -144,7 +146,8 @@ function pieChart(data, chartNr, chartType) {
 	var arc = g.selectAll(".arc")
 		.data(pie(Object.keys(data[chartType])))
 		.enter().append("g")
-	    	.attr("class", "arc");
+	    	.attr("class", "arc")
+	    	.attr("class", function(d) { return (d.data + chartNr).replace(" ", "_"); });
 
 	arc.append("path")
 	    .attr("d", path)
@@ -156,6 +159,9 @@ function pieChart(data, chartNr, chartType) {
 			tip.html(d.data + "<br/>" + d.value + "%")
 				.style("left", (d3.event.pageX) + "px")
 				.style("top", (d3.event.pageY - 28) + "px");
+			var currClass = d3.select(this.parentNode).attr("class");
+			console.log(d3.select("." + currClass).tr);
+			d3.select("." + currClass).tr.style("background-color", "red");
        })
 	    .on("mouseout", function(d) {
 			tip.transition()
@@ -282,9 +288,7 @@ function usageTable(data, columns) {
 };
 
 function pieTable(data, columns, chartNr, chartType) {
-	d3.selectAll(".piethead" + chartNr)
-		.remove();
-	d3.selectAll(".pietbody" + chartNr)
+	d3.selectAll(".pieTable" + chartNr)
 		.remove();
 
 	var pieData = [],
@@ -299,9 +303,9 @@ function pieTable(data, columns, chartNr, chartType) {
 		index += 1;
 	};
 
-	var table = d3.select("#pietablediv" + chartNr).append('table'),
-	thead = table.append('thead').attr("class", "piethead" + chartNr),
-	tbody = table.append('tbody').attr("class", "pietbody" + chartNr);
+	var table = d3.select("#pietablediv" + chartNr).append('table').attr("class", "pieTable" + chartNr),
+	thead = table.append('thead'),
+	tbody = table.append('tbody');
 
 	thead.append('tr')
 		.selectAll('th')
@@ -313,6 +317,7 @@ function pieTable(data, columns, chartNr, chartType) {
 		.data(pieData)
 		.enter()
 		.append('tr')
+		.attr("class", function(d, i) { return (d[chartType] + chartNr).replace(" ", "_"); });
 
 	var cells = rows.selectAll('td')
 		.data(function (row) {
@@ -384,15 +389,15 @@ function loadCharts(weight, selectedMonth) {
 		lineGraph(lando1630);
 		pieChart(lando1630[selectedMonth], 1, "moves");
 		pieChart(lando1630[selectedMonth], 2, "items");
-		barChart(meta0[selectedMonth]);
-		usageTable(meta0[selectedMonth], ["mon", "usage"]);
+		barChart(meta1630[selectedMonth]);
+		usageTable(meta1630[selectedMonth], ["mon", "usage"]);
 		break;
 	case "1760":
 		lineGraph(lando1760);
 		pieChart(lando1760[selectedMonth], 1, "moves");
 		pieChart(lando1760[selectedMonth], 2, "items");
-		barChart(meta0[selectedMonth]);
-		usageTable(meta0[selectedMonth], ["mon", "usage"]);
+		barChart(meta1760[selectedMonth]);
+		usageTable(meta1760[selectedMonth], ["mon", "usage"]);
 		break;
 	}
 };
