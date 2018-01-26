@@ -128,8 +128,8 @@ function pieChart(data, chartNr, chartType) {
 	}
 
 	var tip = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+		.attr("class", "tooltip")
+		.style("opacity", 0);
 
 	var pie = d3.pie()
 	    .sort(null)
@@ -146,27 +146,28 @@ function pieChart(data, chartNr, chartType) {
 	var arc = g.selectAll(".arc")
 		.data(pie(Object.keys(data[chartType])))
 		.enter().append("g")
-	    	.attr("class", "arc")
-	    	.attr("class", function(d) { return (d.data + chartNr).replace(" ", "_"); });
+	    	.attr("class", "arc");
 
 	arc.append("path")
 	    .attr("d", path)
 	    .attr("fill", function(d, i) { return color(i); })
-	    .on("mouseover", function(d) {
-	    	tip.transition()
+	    .attr("class", function(d) { return (d.data + chartNr).replace(" ", "_"); })
+		.on("mouseover", function(d) {
+			tip.transition()
 				.duration(200)
 				.style("opacity", .9);
 			tip.html(d.data + "<br/>" + d.value + "%")
 				.style("left", (d3.event.pageX) + "px")
 				.style("top", (d3.event.pageY - 28) + "px");
-			var currClass = d3.select(this.parentNode).attr("class");
-			console.log(d3.select("." + currClass).tr);
-			d3.select("." + currClass).tr.style("background-color", "red");
+			var currClass = d3.select(this).attr("class");
+			d3.selectAll("." + currClass).style("opacity", 0.55);
        })
 	    .on("mouseout", function(d) {
 			tip.transition()
 				.duration(500)
 				.style("opacity", 0);
+			var currClass = d3.select(this).attr("class");
+			d3.selectAll("." + currClass).style("opacity", 1);
        });
 
 	pieTable(data[chartType], [chartType, "usage"], chartNr, chartType);
@@ -307,6 +308,10 @@ function pieTable(data, columns, chartNr, chartType) {
 	thead = table.append('thead'),
 	tbody = table.append('tbody');
 
+	var tableTip = d3.select("body").append("div")
+		.attr("class", "tooltip")
+		.style("opacity", 0);
+
 	thead.append('tr')
 		.selectAll('th')
 		.data(columns).enter()
@@ -317,7 +322,13 @@ function pieTable(data, columns, chartNr, chartType) {
 		.data(pieData)
 		.enter()
 		.append('tr')
-		.attr("class", function(d, i) { return (d[chartType] + chartNr).replace(" ", "_"); });
+		.attr("class", function(d, i) { return (d[chartType] + chartNr).replace(" ", "_"); })
+		.on("mouseover", function(d) {
+			var currClass = d3.select(this).attr("class");
+			d3.selectAll("." + currClass).style("opacity", 0.55) })
+		.on("mouseout", function(d) {
+			var currClass = d3.select(this).attr("class");
+			d3.selectAll("." + currClass).style("opacity", 1) });
 
 	var cells = rows.selectAll('td')
 		.data(function (row) {
