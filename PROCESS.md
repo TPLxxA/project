@@ -96,10 +96,9 @@ Added:
 
 # Thu 25:
 Current functional issues:
-- There is no interactivity between the pie charts and the tables under them
 - The tooltip on the pie charts do not follow the mouse
 
-Current stylistic issues
+Current stylistic issues:
 - Move and item data is formatted differently than Metagame data, meaning I can't use the same function for both tables
 - pieTable function is ugly as hell
 - New tooltips get created every time the slider is used
@@ -108,3 +107,14 @@ Current stylistic issues
 Fixed issues:
 - Loadcharts doesn't load all charts yet, as not all data are there: added all data
 - Giving table elements an id based on their contents doesn't work, since two charts have "other": Now use classes based on the value e.g. "Choice Scarf"
+
+# Fri 26:
+Current issues:
+- The tooltip on the pie charts do not follow the mouse
+- Data is hard to view/analyse for non-pokemon players (not my target audience, but still)
+
+Current stylistic issues:
+- See Thu 25
+
+Fixed issues:
+- There is no interactivity between the pie charts and the tables under them: item now highlights corresponding item in pie/table on hover
