@@ -15,13 +15,27 @@
 	<body>
 		<div class="container">
 			<!-- page header -->
+			<div id="navbar">
+				<a><h3>Landorus-Therian in VGC 2015</h3></a>
+				<a><button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">0 (unweighted)
+				<span class="caret"></span></button>
+				<ul class="dropdown-menu">
+					<li><a href="#" data-value="0">0 (unweighted)</a></li>
+					<li><a href="#" data-value="1500">1500</a></li>
+					<li><a href="#" data-value="1630">1630</a></li>
+					<li><a href="#" data-value="1760">1760</a></li>
+				</ul></a>
+				<a><input type="range" min="0" max="11" value="0" class="slider" id="range">
+				<p><span id="month"></span></p></a>
+			</div>
+
 			<div class="row">
 				<div class="col-md-12"><h1>Landorus-Therian in VGC 2015</h1></div>
 			</div>
 
 			<!-- dropdown -->
 			<div class="dropdown">
-				<h3>Ranking weight</h3>
+				<h3>Ranking weight<button type="button" class="btn-xs btn-info" title="The ranking weight is based on a Glicko-2 ranking system. Players start at 1500. Better players get more influence in the statistics when a high ranking weight is selected, so it is possible to see trends in top-level play.">Info</button></h3>
 				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">0 (unweighted)
 				<span class="caret"></span></button>
 				<ul class="dropdown-menu">
@@ -46,7 +60,7 @@
 
 			<!-- pie charts -->
 			<div class="row">
-				<div class="col-sm-6"><h2>Moves</h2><svg width="350" height="350" id="piesvg1"></svg><div width="350" height="350" id="pietablediv1"></div></div>
+				<div class="col-sm-6"><h2>Moves<button type="button" class="btn-xs btn-info" title="The moves do not add up to 100%, as a pokemon can learn four moves at a time. The data is still represented in a pie chart, as it is the standardized way to represent move usage in the Pokemon community.">Info</button></h2><svg width="350" height="350" id="piesvg1"></svg><div width="350" height="350" id="pietablediv1"></div></div>
 				<div class="col-sm-6"><h2>Items</h2><svg width="350" height="350" id="piesvg2"></svg><div width="350" height="350" id="pietablediv2"></div></div>
 			</div>
 
@@ -57,12 +71,12 @@
 
 			<!-- bar chart -->
 			<div class="row">
-				<div class="col-md-12"><h2>Frequency of types in top 20</h2><svg width="960" height="500" id="barsvg"></svg></div>
+				<div class="col-md-12"><h2>Frequency of types in top 20<button type="button" class="btn-xs btn-info" title="As it turns out, there are few Ice type Pokemon frequently found in competitive play. This is why you won't find any red bars in this graph.">Info</button></h2><svg width="960" height="500" id="barsvg"></svg></div>
 			</div>
 
 			<!-- table -->
 			<div class="row">
-				<div class="col-md-12"><h2>Top 20 most common Pokemon</h2><div width="350" height="500" id="usagetablediv"></div></div>
+				<div class="col-md-12"><h2>Top 20 most common Pokemon<button type="button" class="btn-xs btn-info" title="The links will send you to a Battle Spot Doubles anyalisis of the selected pokemon. Battle Spot Doubles has the exact ruleset of VGC2015.">Info</button></h2><div width="350" height="500" id="usagetablediv"></div></div>
 			</div>
 		</div>
 

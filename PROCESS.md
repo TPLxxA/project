@@ -111,10 +111,20 @@ Fixed issues:
 # Fri 26:
 Current issues:
 - The tooltip on the pie charts do not follow the mouse
-- Data is hard to view/analyse for non-pokemon players (not my target audience, but still)
 
 Current stylistic issues:
 - See Thu 25
 
 Fixed issues:
 - There is no interactivity between the pie charts and the tables under them: item now highlights corresponding item in pie/table on hover
+
+# Mon 29:
+Fixed issues:
+- table headers now make sense
+- usage stats in tables now display "%"
+- Data is hard to view/analyse for non-pokemon players (not my target audience, but still): added ugly info buttons
+- The tooltip on the pie charts do not follow the mouse: added .on("mousemove")
+
+Added:
+- nice padding to tables
+- sticky navbar (dropdown is currently broken)

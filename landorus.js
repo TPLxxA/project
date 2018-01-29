@@ -10,7 +10,16 @@ var currentWeight, selectedMonth, lando0, lando1500, lando1630, lando1760, meta0
 var monthList = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
 
 
+
 window.onload = function() {
+	// Get the navbar
+	var navbar = document.getElementById("navbar");
+
+	// Get the offset position of the navbar
+	var sticky = navbar.offsetTop;
+
+	// When the user scrolls the page, execute myFunction 
+	window.onscroll = function() {myFunction(sticky)};
 
 	// load all datasets
 	d3.queue()
@@ -24,7 +33,7 @@ window.onload = function() {
 	.defer(d3.json, "data/meta_data_1760.json")
 	.await(dataLoaded); 
 
-	};
+};
 
 function dataLoaded(error, landoData0, landoData1500, landoData1630, landoData1760, metaData0, metaData1500, metaData1630, metaData1760) {
 	if (error) throw error;
@@ -155,13 +164,23 @@ function pieChart(data, chartNr, chartType) {
 		.on("mouseover", function(d) {
 			tip.transition()
 				.duration(200)
-				.style("opacity", .9);
+				.style("opacity", 1);
 			tip.html(d.data + "<br/>" + d.value + "%")
 				.style("left", (d3.event.pageX) + "px")
 				.style("top", (d3.event.pageY - 28) + "px");
 			var currClass = d3.select(this).attr("class");
 			d3.selectAll("." + currClass).style("opacity", 0.55);
-       })
+    	})
+		.on("mousemove", function(d) {
+			tip.transition()
+				.duration(0)
+				.style("opacity", 1);
+			tip.html(d.data + "<br/>" + d.value + "%")
+				.style("left", (d3.event.pageX) + "px")
+				.style("top", (d3.event.pageY - 28) + "px");
+			var currClass = d3.select(this).attr("class");
+			d3.selectAll("." + currClass).style("opacity", 0.55);
+    	})
 	    .on("mouseout", function(d) {
 			tip.transition()
 				.duration(500)
@@ -266,7 +285,7 @@ function usageTable(data, columns) {
 
 	thead.append('tr')
 		.selectAll('th')
-		.data(columns).enter()
+		.data(["Pokemon", "Usage"]).enter()
 		.append('th')
 			.text(function (column) { return column; });
 
@@ -278,7 +297,12 @@ function usageTable(data, columns) {
 	var cells = rows.selectAll('td')
 		.data(function (row) {
 	    	return columns.map(function (column) {
-	      		return {column: column, value: row[column]};
+	    		if (column == "usage") {
+	    			return {column: column, value: row[column] + "%"};
+	    		}
+	    		else {
+	      			return {column: column, value: row[column]};
+	      		};
 	    	});
 	  	})
 		.enter()
@@ -316,7 +340,7 @@ function pieTable(data, columns, chartNr, chartType) {
 		.selectAll('th')
 		.data(columns).enter()
 		.append('th')
-			.text(function (column) { return column; });
+			.text(function (column) { return capitalize(column); });
 
 	var rows = tbody.selectAll('tr')
 		.data(pieData)
@@ -333,7 +357,12 @@ function pieTable(data, columns, chartNr, chartType) {
 	var cells = rows.selectAll('td')
 		.data(function (row) {
 	    	return columns.map(function (column) {
-	      		return {column: column, value: row[column]};
+	      		if (column == "usage") {
+	    			return {column: column, value: row[column] + "%"};
+	    		}
+	    		else {
+	      			return {column: column, value: row[column]};
+	      		};;
 	    	});
 	  	})
 		.enter()
@@ -346,7 +375,7 @@ function pieTable(data, columns, chartNr, chartType) {
 function dropdown(selectedMonth) {
 	$('.dropdown-menu li a').click(function(){
 		
-		$(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+		$(this).find('.btn').html($(this).text() + ' <span class="caret"></span>');
 
 		switch ($(this).attr("data-value")) {
 			case "0":
@@ -457,3 +486,17 @@ function pickColor(type) {
 
 	return color;
 };
+
+// shoutouts to Steve Harrison on Stackoverflow for this function
+function capitalize(string) {
+	return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+// Add the sticky class to the navbar when you reach its scroll position. Remove "sticky" when you leave the scroll position
+function myFunction(sticky) {
+  if (window.pageYOffset >= sticky) {
+    navbar.classList.add("sticky")
+  } else {
+    navbar.classList.remove("sticky");
+  }
+}
