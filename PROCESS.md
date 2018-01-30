@@ -141,3 +141,7 @@ Current issues:
 Fixed issues:
 - slider is too small and not in position: added correct css and it's not ugly now
 - selecting a dropdown item causes the page to go back to top: removed href from list items
+
+Added:
+- comments to entire code
+- headers to all files

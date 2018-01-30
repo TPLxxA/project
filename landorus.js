@@ -2,14 +2,12 @@
 Casper van Velzen
 11030275
 Minor Programmeren / Final Project
-Shows statistics on Landorus-Therian and the metagame in VGC 2015
+Creates visualisations about the usage of Landorus-Therian in VGC 2015 and the metagame at that time
 */
 
 // global variables
 var currentWeight, selectedMonth, lando0, lando1500, lando1630, lando1760, meta0, meta1500, meta1630, meta1760;
 var monthList = ["Januari", "February", "March", "April", "May", "June", "Juli", "August", "September", "October", "November", "December"];
-
-
 
 window.onload = function() {
 	// load all datasets
@@ -225,18 +223,18 @@ function pieTable(data, columns, chartNr, chartType) {
 	// fill cells
 	var cells = rows.selectAll("td")
 		.data(function (row) {
-	    	return columns.map(function (column) {
-	      		if (column == "usage") {
-	    			return {column: column, value: row[column] + "%"};
-	    		}
-	    		else {
-	      			return {column: column, value: row[column]};
-	      		};;
-	    	});
-	  	})
+			return columns.map(function (column) {
+				if (column == "usage") {
+					return {column: column, value: row[column] + "%"};
+				}
+				else {
+					return {column: column, value: row[column]};
+				};;
+			});
+		})
 		.enter()
 		.append("td")
-	    	.text(function (d) { return d.value; });
+			.text(function (d) { return d.value; });
 };
 
 function barChart(data) {
@@ -459,7 +457,7 @@ function countTypes(data) {
 };
 
 function pickColor(type) {
-	//  default color/ neutral matchup
+	// default color/ neutral matchup
 	var color = "blue";
 
 	// if (dis)advantagous matchup, change color
@@ -484,7 +482,7 @@ function pickColor(type) {
 	return color;
 };
 
-// shoutouts to Steve Harrison on Stackoverflow for this function
+// credits to Steve Harrison on Stackoverflow for this function
 function capitalize(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 };
