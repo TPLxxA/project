@@ -21,7 +21,6 @@
 </head>
 <body>
 	<div class="container">
-		<!-- navbar -->
 		<!-- Static navbar -->
 		<nav class="navbar navbar-default navbar-fixed-top">
 			<div class="container-fluid">
@@ -30,31 +29,31 @@
 				</div>
 				<div class="navbar-collapse collapse" id="navbar">
 					<ul class="nav navbar-nav">
-						<li class="inactive">
+						<li>
 							<a>Ranking weight:</a>
 						</li>
 						<li class="dropdown">
-							<a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">Dropdown <span class="caret"></span></a>
+							<a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">0 (unweighted) <span class="caret"></span></a>
 							<ul class="dropdown-menu">
 								<li>
-									<a href="#" data-value="0">0 (unweighted)</a>
+									<a data-value="0">0 (unweighted)</a>
 								</li>
 								<li>
-									<a href="#" data-value="1500">1500</a>
+									<a data-value="1500">1500</a>
 								</li>
 								<li>
-									<a href="#" data-value="1630">1630</a>
+									<a data-value="1630">1630</a>
 								</li>
 								<li>
-									<a href="#" data-value="1760">1760</a>
+									<a data-value="1760">1760</a>
 								</li>
 							</ul>
 						</li>
 					</ul>
-					<ul class="nav navbar-nav navbar-right">
-						<p><input type="range" min="0" max="11" value="0" class="slider" id="range">
-						<a><span id="month"></span></a></p>
-					</ul>
+					<div class="nav navbar-nav navbar-right">
+						<input type="range" min="0" max="11" value="0" class="slider" id="range">
+						<a><span id="month"></span></a>
+					</div>
 				</div>
 			</div>
 		</nav>

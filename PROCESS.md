@@ -119,6 +119,11 @@ Fixed issues:
 - There is no interactivity between the pie charts and the tables under them: item now highlights corresponding item in pie/table on hover
 
 # Mon 29:
+To do (maybe, points spawned by peer feedback):
+- Make items/moves correspond to their own color
+- Paragraph introducing the problem
+- Make clear what the bar chart actually does
+
 Fixed issues:
 - table headers now make sense
 - usage stats in tables now display "%"
@@ -128,3 +133,11 @@ Fixed issues:
 Added:
 - nice padding to tables
 - sticky navbar (dropdown is currently broken)
+
+# Tue 30:
+Current issues:
+- dropdown does not display current selection
+
+Fixed issues:
+- slider is too small and not in position: added correct css and it's not ugly now
+- selecting a dropdown item causes the page to go back to top: removed href from list items

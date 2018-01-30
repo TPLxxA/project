@@ -44,7 +44,7 @@ function dataLoaded(error, landoData0, landoData1500, landoData1630, landoData17
 	loadCharts(currentWeight, selectedMonth);
 
 	// call functions for interactive elements
-	dropdown(selectedMonth);
+	dropdown();
 	slider();
 };
 
@@ -111,12 +111,14 @@ function pieChart(data, chartNr, chartType) {
 	d3.selectAll(".pieg" + chartNr)
 		.remove();
 	
+	// dimensions of the line graph
 	var svg = d3.select("#piesvg" + chartNr),
 	width = 350,
 	height = 350,
 	radius = Math.min(width, height) / 2,
 	g = svg.append("g").attr("class", "pieg" + chartNr).attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
+	// pick color scheme
 	if (chartType == "moves") {
 		var color = d3.scaleOrdinal(["#BF360C", "#D84315", "#E64A19", "#F4511E", "#FF5722", "#FF7043", "#FF8A65", "#FFAB91", "#FFCCBC"]);
 	}
@@ -124,27 +126,28 @@ function pieChart(data, chartNr, chartType) {
 		var color = d3.scaleOrdinal(["#0D47A1", "#1565C0", "#1976D2", "#1E88E5", "#2196F3", "#42A5F5", "#64B5F6", "#90CAF9", "#BBDEFB"]);
 	}
 
-	var tip = d3.select("body").append("div")
-		.attr("class", "tooltip")
-		.style("opacity", 0);
-
+	// calculate size of pie slices
 	var pie = d3.pie()
 		.sort(null)
 		.value(function(d) { return data[chartType][d]; });
 
+	// calculate path of pie slices
 	var path = d3.arc()
 		.outerRadius(radius - 10)
 		.innerRadius(0);
 
-	var label = d3.arc()
-		.outerRadius(radius - 40)
-		.innerRadius(radius - 40);
-
+	// add correct number of slices
 	var arc = g.selectAll(".arc")
 		.data(pie(Object.keys(data[chartType])))
 		.enter().append("g")
 			.attr("class", "arc");
 
+	// initiate tooltip function
+	var tip = d3.select("body").append("div")
+		.attr("class", "tooltip")
+		.style("opacity", 0);
+
+	// draw pie
 	arc.append("path")
 		.attr("d", path)
 		.attr("fill", function(d, i) { return color(i); })
@@ -159,15 +162,10 @@ function pieChart(data, chartNr, chartType) {
 			var currClass = d3.select(this).attr("class");
 			d3.selectAll("." + currClass).style("opacity", 0.55);
 		})
+		// make tooltip follow mouse
 		.on("mousemove", function(d) {
-			tip.transition()
-				.duration(0)
-				.style("opacity", 1);
-			tip.html(d.data + "<br/>" + d.value + "%")
-				.style("left", (d3.event.pageX) + "px")
+			tip.style("left", (d3.event.pageX) + "px")
 				.style("top", (d3.event.pageY - 28) + "px");
-			var currClass = d3.select(this).attr("class");
-			d3.selectAll("." + currClass).style("opacity", 0.55);
 		})
 		.on("mouseout", function(d) {
 			tip.transition()
@@ -177,7 +175,71 @@ function pieChart(data, chartNr, chartType) {
 			d3.selectAll("." + currClass).style("opacity", 1);
 		});
 
+	// create table displaying data
 	pieTable(data[chartType], [chartType, "usage"], chartNr, chartType);
+};
+
+function pieTable(data, columns, chartNr, chartType) {
+	// clear current table
+	d3.selectAll(".pieTable" + chartNr)
+		.remove();
+
+	// extract data from dataset
+	var pieData = [],
+	index = 0;
+	for (var key in data) {
+		if (chartType == "moves") {
+			pieData[index] = {moves: key, usage: data[key]};
+		}
+		else {
+			pieData[index] = {items: key, usage: data[key]};
+		};
+		index += 1;
+	};
+
+
+	var table = d3.select("#pietablediv" + chartNr).append("table").attr("class", "pieTable" + chartNr),
+	thead = table.append("thead"),
+	tbody = table.append("tbody");
+
+	var tableTip = d3.select("body").append("div")
+		.attr("class", "tooltip")
+		.style("opacity", 0);
+
+	thead.append("tr")
+		.selectAll("th")
+		.data(columns).enter()
+		.append("th")
+			.text(function (column) { return capitalize(column); });
+
+	var rows = tbody.selectAll("tr")
+		.data(pieData)
+		.enter()
+		.append("tr")
+		.attr("class", function(d, i) { return (d[chartType] + chartNr).replace(" ", "_"); })
+		.on("mouseover", function(d) {
+			var currClass = d3.select(this).attr("class");
+			d3.selectAll("." + currClass).style("opacity", 0.55) })
+		.on("mouseout", function(d) {
+			var currClass = d3.select(this).attr("class");
+			d3.selectAll("." + currClass).style("opacity", 1) });
+
+	var cells = rows.selectAll("td")
+		.data(function (row) {
+	    	return columns.map(function (column) {
+	      		if (column == "usage") {
+	    			return {column: column, value: row[column] + "%"};
+	    		}
+	    		else {
+	      			return {column: column, value: row[column]};
+	      		};;
+	    	});
+	  	})
+		.enter()
+		.append("td")
+	    	.text(function (d) { return d.value; });
+
+	return table;
 };
 
 function barChart(data) {
@@ -267,22 +329,22 @@ function usageTable(data, columns) {
 	d3.selectAll(".usagetbody")
 		.remove();
 
-	var table = d3.select("#usagetablediv").append('table'),
-	thead = table.append('thead').attr("class", "usagethead"),
-	tbody = table.append('tbody').attr("class", "usagetbody");
+	var table = d3.select("#usagetablediv").append("table"),
+	thead = table.append("thead").attr("class", "usagethead"),
+	tbody = table.append("tbody").attr("class", "usagetbody");
 
-	thead.append('tr')
-		.selectAll('th')
+	thead.append("tr")
+		.selectAll("th")
 		.data(["Pokemon", "Usage"]).enter()
-		.append('th')
+		.append("th")
 			.text(function (column) { return column; });
 
-	var rows = tbody.selectAll('tr')
+	var rows = tbody.selectAll("tr")
 		.data(data)
 		.enter()
-		.append('tr');
+		.append("tr");
 
-	var cells = rows.selectAll('td')
+	var cells = rows.selectAll("td")
 		.data(function (row) {
 			return columns.map(function (column) {
 				if (column == "usage") {
@@ -294,76 +356,18 @@ function usageTable(data, columns) {
 				});
 			})
 		.enter()
-		.append('td')
+		.append("td")
 			.text(function (d) { return d.value; });
 
 	return table;
 };
 
-function pieTable(data, columns, chartNr, chartType) {
-	d3.selectAll(".pieTable" + chartNr)
-		.remove();
-
-	var pieData = [],
-	index = 0;
-	for (var key in data) {
-		if (chartType == "moves") {
-			pieData[index] = {moves: key, usage: data[key]};
-		}
-		else {
-			pieData[index] = {items: key, usage: data[key]};
-		};
-		index += 1;
-	};
-
-	var table = d3.select("#pietablediv" + chartNr).append('table').attr("class", "pieTable" + chartNr),
-	thead = table.append('thead'),
-	tbody = table.append('tbody');
-
-	var tableTip = d3.select("body").append("div")
-		.attr("class", "tooltip")
-		.style("opacity", 0);
-
-	thead.append('tr')
-		.selectAll('th')
-		.data(columns).enter()
-		.append('th')
-			.text(function (column) { return capitalize(column); });
-
-	var rows = tbody.selectAll('tr')
-		.data(pieData)
-		.enter()
-		.append('tr')
-		.attr("class", function(d, i) { return (d[chartType] + chartNr).replace(" ", "_"); })
-		.on("mouseover", function(d) {
-			var currClass = d3.select(this).attr("class");
-			d3.selectAll("." + currClass).style("opacity", 0.55) })
-		.on("mouseout", function(d) {
-			var currClass = d3.select(this).attr("class");
-			d3.selectAll("." + currClass).style("opacity", 1) });
-
-	var cells = rows.selectAll('td')
-		.data(function (row) {
-	    	return columns.map(function (column) {
-	      		if (column == "usage") {
-	    			return {column: column, value: row[column] + "%"};
-	    		}
-	    		else {
-	      			return {column: column, value: row[column]};
-	      		};;
-	    	});
-	  	})
-		.enter()
-		.append('td')
-	    	.text(function (d) { return d.value; });
-
-	return table;
-};
-
-function dropdown(selectedMonth) {
-	$('.dropdown-menu li a').click(function(){
+function dropdown() {
+	$(".dropdown-menu li a").click(function(){
 		
-		$(this).find('.btn').html($(this).text() + ' <span class="caret"></span>');
+		// AYYY LMAO IT WORKS
+		$(this).parents(".dropdown").find(".dropdown-toggle").html($(this).text() + ' <span class="caret"></span>');
+
 		currentWeight = $(this).attr("data-value");
 
 		loadCharts(currentWeight, selectedMonth);
@@ -380,6 +384,7 @@ function slider() {
 		output.innerHTML = monthList[this.value];
 
 		selectedMonth = this.value;
+
 		loadCharts(currentWeight, selectedMonth);
 	}
 };

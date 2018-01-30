@@ -22,19 +22,20 @@ path:hover {
 }
 
 .slidecontainer {
-  width: 100%;
+  width: 50%;
 }
 
 .slider {
   -webkit-appearance: none;
   appearance: none;
-  width: 100%;
+  width: 50%;
   height: 25px;
   background: #d3d3d3;
   outline: none;
   opacity: 0.7;
   -webkit-transition: .2s;
   transition: opacity .2s;
+  margin-right: 240px;
 }
 
 .slider:hover {
@@ -56,3 +57,7 @@ path:hover {
   padding-top: 50px;
 }
 
+.navbar-right {
+  margin-right: 20px;
+  margin-top: 5px;
+}
