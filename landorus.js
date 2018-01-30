@@ -12,7 +12,6 @@ var monthList = ["Januari", "February", "March", "April", "May", "June", "Juli",
 
 
 window.onload = function() {
-
 	// load all datasets
 	d3.queue()
 	.defer(d3.json, "data/Lando_data_0.json")
@@ -23,8 +22,7 @@ window.onload = function() {
 	.defer(d3.json, "data/meta_data_1500.json")
 	.defer(d3.json, "data/meta_data_1630.json")
 	.defer(d3.json, "data/meta_data_1760.json")
-	.await(dataLoaded); 
-
+	.await(dataLoaded);
 };
 
 function dataLoaded(error, landoData0, landoData1500, landoData1630, landoData1760, metaData0, metaData1500, metaData1630, metaData1760) {
@@ -44,6 +42,8 @@ function dataLoaded(error, landoData0, landoData1500, landoData1630, landoData17
 
 	// initial creation of all graphs
 	loadCharts(currentWeight, selectedMonth);
+
+	// call functions for interactive elements
 	dropdown(selectedMonth);
 	slider();
 };
@@ -53,40 +53,31 @@ function lineGraph(data) {
 	d3.selectAll(".lineg")
 		.remove();
 
-	/*
-	Bug: svg.attr is "100%" due to being variable thanks to bootstrap
-	this means width == NaN, making it incompatible with d3 functions
-	Solution: dimensions of bounding box?!?
-	LITERALLY DON"T EVEN TRY TO SOLVE THIS BS
-	*/
+	// dimensions of the line graph
 	var svg = d3.select("#linesvg"),
 	margin = {top: 30, right: 30, bottom: 30, left: 30},
-    bbox = linesvg.width.animVal.value,
-    width = bbox - margin.left - margin.right,
+	width = +svg.attr("width") - margin.left - margin.right,
 	height = +svg.attr("height") - margin.top - margin.bottom,
 	g = svg.append("g").attr("class", "lineg").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+	// create x axis
 	var x = d3.scaleLinear()
 		.domain(function(d) { return d.month; })
 		.rangeRound([0, width]);
 
+	x.domain(d3.extent(data, function(d) { return d.month; }));
+
+	g.append("g")
+		.attr("transform", "translate(0," + height + ")")
+		.call(d3.axisBottom(x)
+		.ticks(12)	
+		.tickFormat(function(d, i) { return monthList[i]; }));
+
+	// create y axis
 	var y = d3.scaleLinear()
 		.rangeRound([height, 0]);
 
-	x.domain(d3.extent(data, function(d) { return d.month; }));
-    y.domain([15, 65]);
-
-	var line = d3.line()
-	.x(function(d) { return x(d.month); })
-	.y(function(d) { return y(d.usage_stats.usage); });
-
-    g.append("g")
-    	.attr("transform", "translate(0," + height + ")")
-    	.call(d3.axisBottom(x)
-    	.ticks(12)	
-    	.tickFormat(function(d, i) { return monthList[i]; }));
-
-	// create y axis
+	y.domain([15, 65]);
 	g.append("g")
 		.call(d3.axisLeft(y))
 	.append("text")
@@ -98,7 +89,12 @@ function lineGraph(data) {
 		.attr("text-anchor", "end")
 		.text("usage (%)");
 
-	// create line
+	// function to create line
+	var line = d3.line()
+	.x(function(d) { return x(d.month); })
+	.y(function(d) { return y(d.usage_stats.usage); });
+
+	// draw line
 	d3.selectAll(".lineg")
 		.append("path")
 		.data([data])
@@ -116,12 +112,12 @@ function pieChart(data, chartNr, chartType) {
 		.remove();
 	
 	var svg = d3.select("#piesvg" + chartNr),
-    width = 350,
-    height = 350,
-    radius = Math.min(width, height) / 2,
-    g = svg.append("g").attr("class", "pieg" + chartNr).attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+	width = 350,
+	height = 350,
+	radius = Math.min(width, height) / 2,
+	g = svg.append("g").attr("class", "pieg" + chartNr).attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-    if (chartType == "moves") {
+	if (chartType == "moves") {
 		var color = d3.scaleOrdinal(["#BF360C", "#D84315", "#E64A19", "#F4511E", "#FF5722", "#FF7043", "#FF8A65", "#FFAB91", "#FFCCBC"]);
 	}
 	else {
@@ -133,26 +129,26 @@ function pieChart(data, chartNr, chartType) {
 		.style("opacity", 0);
 
 	var pie = d3.pie()
-	    .sort(null)
-	    .value(function(d) { return data[chartType][d]; });
+		.sort(null)
+		.value(function(d) { return data[chartType][d]; });
 
 	var path = d3.arc()
-	    .outerRadius(radius - 10)
-	    .innerRadius(0);
+		.outerRadius(radius - 10)
+		.innerRadius(0);
 
 	var label = d3.arc()
-	    .outerRadius(radius - 40)
-	    .innerRadius(radius - 40);
+		.outerRadius(radius - 40)
+		.innerRadius(radius - 40);
 
 	var arc = g.selectAll(".arc")
 		.data(pie(Object.keys(data[chartType])))
 		.enter().append("g")
-	    	.attr("class", "arc");
+			.attr("class", "arc");
 
 	arc.append("path")
-	    .attr("d", path)
-	    .attr("fill", function(d, i) { return color(i); })
-	    .attr("class", function(d) { return (d.data + chartNr).replace(" ", "_"); })
+		.attr("d", path)
+		.attr("fill", function(d, i) { return color(i); })
+		.attr("class", function(d) { return (d.data + chartNr).replace(" ", "_"); })
 		.on("mouseover", function(d) {
 			tip.transition()
 				.duration(200)
@@ -162,7 +158,7 @@ function pieChart(data, chartNr, chartType) {
 				.style("top", (d3.event.pageY - 28) + "px");
 			var currClass = d3.select(this).attr("class");
 			d3.selectAll("." + currClass).style("opacity", 0.55);
-    	})
+		})
 		.on("mousemove", function(d) {
 			tip.transition()
 				.duration(0)
@@ -172,14 +168,14 @@ function pieChart(data, chartNr, chartType) {
 				.style("top", (d3.event.pageY - 28) + "px");
 			var currClass = d3.select(this).attr("class");
 			d3.selectAll("." + currClass).style("opacity", 0.55);
-    	})
-	    .on("mouseout", function(d) {
+		})
+		.on("mouseout", function(d) {
 			tip.transition()
 				.duration(500)
 				.style("opacity", 0);
 			var currClass = d3.select(this).attr("class");
 			d3.selectAll("." + currClass).style("opacity", 1);
-       });
+		});
 
 	pieTable(data[chartType], [chartType, "usage"], chartNr, chartType);
 };
@@ -196,16 +192,16 @@ function barChart(data) {
 				"psychic", "rock", "steel", "water"];
 
 	var svg = d3.select("#barsvg"),
-    margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = +svg.attr("width") - margin.left - margin.right,
-    height = +svg.attr("height") - margin.top - margin.bottom;
+	margin = {top: 20, right: 20, bottom: 30, left: 40},
+	width = +svg.attr("width") - margin.left - margin.right,
+	height = +svg.attr("height") - margin.top - margin.bottom;
 
 	var x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
-	    y = d3.scaleLinear().rangeRound([height, 0]);
+		y = d3.scaleLinear().rangeRound([height, 0]);
 
 	var g = svg.append("g")
 		.attr("class", "barg")
-	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 	x.domain(typelist.map(function(d) { return d; }));
 	y.domain([0, 6]);
@@ -241,7 +237,7 @@ function barChart(data) {
 	var legendText = ["good matchup", "neutral matchup", "bad matchup", "very bad matchup"];
 
 	// create legend
-    var legend = g.append("g")
+	var legend = g.append("g")
 		.attr("font-family", "sans-serif")
 		.attr("font-size", 10)
 		.attr("text-anchor", "end")
@@ -252,17 +248,17 @@ function barChart(data) {
 		.attr("class", "barlegendbox")
 		.attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
-    legend.append("rect")
-        .attr("x", width - 19)
-        .attr("width", 19)
-        .attr("height", 19)
-        .attr("fill", legendColor);
+	legend.append("rect")
+		.attr("x", width - 19)
+		.attr("width", 19)
+		.attr("height", 19)
+		.attr("fill", legendColor);
 
-    legend.append("text")
-        .attr("x", width - 24)
-        .attr("y", 9.5)
-        .attr("dy", "0.32em")
-        .text(function(d, i) { return legendText[i] });
+	legend.append("text")
+		.attr("x", width - 24)
+		.attr("y", 9.5)
+		.attr("dy", "0.32em")
+		.text(function(d, i) { return legendText[i] });
 };
 
 function usageTable(data, columns) {
@@ -288,18 +284,18 @@ function usageTable(data, columns) {
 
 	var cells = rows.selectAll('td')
 		.data(function (row) {
-	    	return columns.map(function (column) {
-	    		if (column == "usage") {
-	    			return {column: column, value: row[column] + "%"};
-	    		}
-	    		else {
-	      			return {column: column, value: row[column]};
-	      		};
-	    	});
-	  	})
+			return columns.map(function (column) {
+				if (column == "usage") {
+					return {column: column, value: row[column] + "%"};
+				}
+				else {
+						return {column: column, value: row[column]};
+					};
+				});
+			})
 		.enter()
 		.append('td')
-	    	.text(function (d) { return d.value; });
+			.text(function (d) { return d.value; });
 
 	return table;
 };
@@ -368,21 +364,8 @@ function dropdown(selectedMonth) {
 	$('.dropdown-menu li a').click(function(){
 		
 		$(this).find('.btn').html($(this).text() + ' <span class="caret"></span>');
+		currentWeight = $(this).attr("data-value");
 
-		switch ($(this).attr("data-value")) {
-			case "0":
-				currentWeight = "0";
-				break;
-			case "1500":
-				currentWeight = "1500";
-				break;
-			case "1630":
-				currentWeight = "1630";
-				break;
-			case "1760":
-				currentWeight = "1760";
-				break;
-		}
 		loadCharts(currentWeight, selectedMonth);
 	});
 }
@@ -394,10 +377,10 @@ function slider() {
 
 	// Update the current slider value (each time you drag the slider handle)
 	slider.oninput = function() {
-	    output.innerHTML = monthList[this.value];
+		output.innerHTML = monthList[this.value];
 
-	    selectedMonth = this.value;
-	    loadCharts(currentWeight, selectedMonth);
+		selectedMonth = this.value;
+		loadCharts(currentWeight, selectedMonth);
 	}
 };
 
@@ -450,7 +433,7 @@ function countTypes(data) {
 			if (data[key].type2 == typedata[i].type) {
 				typedata[i].frequency += 1;
 			}
-		}		
+		}
 	}
 
 	return typedata
