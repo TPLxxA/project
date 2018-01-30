@@ -197,21 +197,19 @@ function pieTable(data, columns, chartNr, chartType) {
 		index += 1;
 	};
 
-
+	// initiate table elements
 	var table = d3.select("#pietablediv" + chartNr).append("table").attr("class", "pieTable" + chartNr),
 	thead = table.append("thead"),
 	tbody = table.append("tbody");
 
-	var tableTip = d3.select("body").append("div")
-		.attr("class", "tooltip")
-		.style("opacity", 0);
-
+	// draw table head
 	thead.append("tr")
 		.selectAll("th")
 		.data(columns).enter()
 		.append("th")
 			.text(function (column) { return capitalize(column); });
 
+	// draw table rows
 	var rows = tbody.selectAll("tr")
 		.data(pieData)
 		.enter()
@@ -224,6 +222,7 @@ function pieTable(data, columns, chartNr, chartType) {
 			var currClass = d3.select(this).attr("class");
 			d3.selectAll("." + currClass).style("opacity", 1) });
 
+	// fill cells
 	var cells = rows.selectAll("td")
 		.data(function (row) {
 	    	return columns.map(function (column) {
@@ -238,40 +237,40 @@ function pieTable(data, columns, chartNr, chartType) {
 		.enter()
 		.append("td")
 	    	.text(function (d) { return d.value; });
-
-	return table;
 };
 
 function barChart(data) {
-	// clear pie chart
+	// remove previous bars
 	d3.selectAll(".barg")
 		.remove();
 
-	// count most common types
+	// count all types
 	var typedata = countTypes(data),
 	typelist = ["bug", "dark", "dragon", "electric", "fairy", "fighting", "fire",
 				"flying", "ghost", "grass", "ground", "ice", "normal", "poison", 
 				"psychic", "rock", "steel", "water"];
 
+	// dimensions of the bar graph
 	var svg = d3.select("#barsvg"),
 	margin = {top: 20, right: 20, bottom: 30, left: 40},
 	width = +svg.attr("width") - margin.left - margin.right,
-	height = +svg.attr("height") - margin.top - margin.bottom;
+	height = +svg.attr("height") - margin.top - margin.bottom,
+	g = svg.append("g").attr("class", "barg").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	var x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
-		y = d3.scaleLinear().rangeRound([height, 0]);
-
-	var g = svg.append("g")
-		.attr("class", "barg")
-		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	// create x axis
+	var x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
 
 	x.domain(typelist.map(function(d) { return d; }));
-	y.domain([0, 6]);
 
 	g.append("g")
 		.attr("class", "axis axis--x")
 		.attr("transform", "translate(0," + height + ")")
 		.call(d3.axisBottom(x));
+
+	// create y axis
+	y = d3.scaleLinear().rangeRound([height, 0]);
+
+	y.domain([0, 6]);
 
 	g.append("g")
 		.attr("class", "axis axis--y")
@@ -283,6 +282,7 @@ function barChart(data) {
 		.attr("text-anchor", "end")
 		.text("Frequency");
 
+	// draw bars
 	g.selectAll(".bar")
 		.data(typedata)
 	.enter().append("rect")
@@ -293,6 +293,7 @@ function barChart(data) {
 		.attr("width", x.bandwidth())
 		.attr("height", function(d) { return height - y(d.frequency); });
 
+	// initiate legend
 	var legendColor = d3.scaleOrdinal()
 		.range(["green", "blue", "orange", "red"]);
 
@@ -324,26 +325,29 @@ function barChart(data) {
 };
 
 function usageTable(data, columns) {
-	d3.selectAll(".usagethead")
-		.remove();
-	d3.selectAll(".usagetbody")
+	// clear previous table
+	d3.selectAll(".usagetable")
 		.remove();
 
-	var table = d3.select("#usagetablediv").append("table"),
+	// initiate table elements
+	var table = d3.select("#usagetablediv").append("table").attr("class", "usagetable"),
 	thead = table.append("thead").attr("class", "usagethead"),
 	tbody = table.append("tbody").attr("class", "usagetbody");
 
+	// draw table head
 	thead.append("tr")
 		.selectAll("th")
 		.data(["Pokemon", "Usage"]).enter()
 		.append("th")
 			.text(function (column) { return column; });
 
+	// draw table row
 	var rows = tbody.selectAll("tr")
 		.data(data)
 		.enter()
 		.append("tr");
 
+	// fill cells
 	var cells = rows.selectAll("td")
 		.data(function (row) {
 			return columns.map(function (column) {
@@ -358,38 +362,46 @@ function usageTable(data, columns) {
 		.enter()
 		.append("td")
 			.text(function (d) { return d.value; });
-
-	return table;
 };
 
 function dropdown() {
+	// listen for click on list item
 	$(".dropdown-menu li a").click(function(){
 		
-		// AYYY LMAO IT WORKS
+		// change button text to match current selection
 		$(this).parents(".dropdown").find(".dropdown-toggle").html($(this).text() + ' <span class="caret"></span>');
 
+		// no need to update charts if current value is selected
+		if ($(this).attr("data-value") == currentWeight) {
+			return NaN;
+		};
+		// update ranking weight
 		currentWeight = $(this).attr("data-value");
 
+		// update charts with new ranking weight
 		loadCharts(currentWeight, selectedMonth);
 	});
 }
 
 function slider() {
+	// check current slider position
 	var slider = document.getElementById("range");
 	var output = document.getElementById("month");
 	output.innerHTML = monthList[0];
 
-	// Update the current slider value (each time you drag the slider handle)
+	// update slider info on drag
 	slider.oninput = function() {
 		output.innerHTML = monthList[this.value];
 
 		selectedMonth = this.value;
 
+		// update charts
 		loadCharts(currentWeight, selectedMonth);
 	}
 };
 
 function loadCharts(weight, selectedMonth) {
+	// update graphs using correct ranking weight and month
 	switch (weight) {
 	case "0":
 		lineGraph(lando0);
@@ -423,6 +435,7 @@ function loadCharts(weight, selectedMonth) {
 };
 
 function countTypes(data) {
+	// initiate list of types to count
 	var typedata = [{"type": "bug", "frequency": 0}, {"type": "dark", "frequency": 0}, {"type": "dragon", "frequency": 0},
 					{"type": "electric", "frequency": 0}, {"type": "fairy", "frequency": 0}, {"type": "fighting", "frequency": 0},
 					{"type": "fire", "frequency": 0}, {"type": "flying", "frequency": 0}, {"type": "ghost", "frequency": 0},
@@ -430,6 +443,7 @@ function countTypes(data) {
 					{"type": "normal", "frequency": 0}, {"type": "poison", "frequency": 0}, {"type": "psychic", "frequency": 0},
 					{"type": "rock", "frequency": 0}, {"type": "steel", "frequency": 0}, {"type": "water", "frequency": 0}]
 
+	// increment correct type on every occurance in data
 	for (var key in data) {
 		for (var i in typedata) {
 			if (data[key].type1 == typedata[i].type) {
@@ -441,11 +455,14 @@ function countTypes(data) {
 		}
 	}
 
-	return typedata
+	return typedata;
 };
 
 function pickColor(type) {
+	//  default color/ neutral matchup
 	var color = "blue";
+
+	// if (dis)advantagous matchup, change color
 	switch (type) {
 		case "bug":
 		case "electric":
