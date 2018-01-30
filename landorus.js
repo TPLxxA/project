@@ -7,19 +7,11 @@ Shows statistics on Landorus-Therian and the metagame in VGC 2015
 
 // global variables
 var currentWeight, selectedMonth, lando0, lando1500, lando1630, lando1760, meta0, meta1500, meta1630, meta1760;
-var monthList = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+var monthList = ["Januari", "February", "March", "April", "May", "June", "Juli", "August", "September", "October", "November", "December"];
 
 
 
 window.onload = function() {
-	// Get the navbar
-	var navbar = document.getElementById("navbar");
-
-	// Get the offset position of the navbar
-	var sticky = navbar.offsetTop;
-
-	// When the user scrolls the page, execute myFunction 
-	window.onscroll = function() {myFunction(sticky)};
 
 	// load all datasets
 	d3.queue()
@@ -491,12 +483,3 @@ function pickColor(type) {
 function capitalize(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 };
-
-// Add the sticky class to the navbar when you reach its scroll position. Remove "sticky" when you leave the scroll position
-function myFunction(sticky) {
-  if (window.pageYOffset >= sticky) {
-    navbar.classList.add("sticky")
-  } else {
-    navbar.classList.remove("sticky");
-  }
-}

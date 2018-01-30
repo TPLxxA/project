@@ -1,87 +1,103 @@
+<!DOCTYPE html>
 <html>
-	<head>
-		<script src="//d3js.org/d3.v4.min.js" charset="utf-8"></script>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<script src="https://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		<script src="http://d3js.org/queue.v1.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="style.css">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<script src="landorus.js"></script>
+<head>
 
-		<title>Landorus-T</title>
-	</head>
-	<body>
-		<div class="container">
-			<!-- page header -->
-			<div id="navbar">
-				<a><h3>Landorus-Therian in VGC 2015</h3></a>
-				<a><button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">0 (unweighted)
-				<span class="caret"></span></button>
-				<ul class="dropdown-menu">
-					<li><a href="#" data-value="0">0 (unweighted)</a></li>
-					<li><a href="#" data-value="1500">1500</a></li>
-					<li><a href="#" data-value="1630">1630</a></li>
-					<li><a href="#" data-value="1760">1760</a></li>
-				</ul></a>
-				<a><input type="range" min="0" max="11" value="0" class="slider" id="range">
-				<p><span id="month"></span></p></a>
+	<script charset="utf-8" src="//d3js.org/d3.v4.min.js">
+	</script>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js">
+	</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+	</script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
+	</script>
+	<script src="http://d3js.org/queue.v1.min.js">
+	</script>
+	<link href="style.css" rel="stylesheet" type="text/css">
+	<meta content="width=device-width, initial-scale=1" name="viewport">
+	<script src="landorus.js">
+	</script>
+	<title>Landorus-T</title>
+</head>
+<body>
+	<div class="container">
+		<!-- navbar -->
+		<!-- Static navbar -->
+		<nav class="navbar navbar-default navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button aria-controls="navbar" aria-expanded="false" class="navbar-toggle collapsed" data-target="#navbar" data-toggle="collapse" type="button"><span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button> <a class="navbar-brand" href="#">Landorus-Therian in VGC 2015</a>
+				</div>
+				<div class="navbar-collapse collapse" id="navbar">
+					<ul class="nav navbar-nav">
+						<li class="inactive">
+							<a>Ranking weight:</a>
+						</li>
+						<li class="dropdown">
+							<a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">Dropdown <span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="#" data-value="0">0 (unweighted)</a>
+								</li>
+								<li>
+									<a href="#" data-value="1500">1500</a>
+								</li>
+								<li>
+									<a href="#" data-value="1630">1630</a>
+								</li>
+								<li>
+									<a href="#" data-value="1760">1760</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<p><input type="range" min="0" max="11" value="0" class="slider" id="range">
+						<a><span id="month"></span></a></p>
+					</ul>
+				</div>
 			</div>
+		</nav>
 
+		<!-- line chart -->
+		<div class="bodycontent">
 			<div class="row">
-				<div class="col-md-12"><h1>Landorus-Therian in VGC 2015</h1></div>
-			</div>
-
-			<!-- dropdown -->
-			<div class="dropdown">
-				<h3>Ranking weight<button type="button" class="btn-xs btn-info" title="The ranking weight is based on a Glicko-2 ranking system. Players start at 1500. Better players get more influence in the statistics when a high ranking weight is selected, so it is possible to see trends in top-level play.">Info</button></h3>
-				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">0 (unweighted)
-				<span class="caret"></span></button>
-				<ul class="dropdown-menu">
-					<li><a href="#" data-value="0">0 (unweighted)</a></li>
-					<li><a href="#" data-value="1500">1500</a></li>
-					<li><a href="#" data-value="1630">1630</a></li>
-					<li><a href="#" data-value="1760">1760</a></li>
-				</ul>
-			</div>
-
-			<!-- line chart -->
-			<div class="row">
-				<div class="col-md-12"><h2>Usage stats throughout the months</h2><svg width="720" height="500" id="linesvg"></svg></div>
-			</div>
-
-			<!-- slider -->
-			<div class="slidecontainer">
-				<h3>Month</h3>
-				<input type="range" min="0" max="11" value="0" class="slider" id="range">
-				<p><span id="month"></span></p>
+				<div class="col-md-12">
+					<h2>Usage stats throughout the months</h2><svg height="500" id="linesvg" width="720"></svg>
+				</div>
 			</div>
 
 			<!-- pie charts -->
 			<div class="row">
-				<div class="col-sm-6"><h2>Moves<button type="button" class="btn-xs btn-info" title="The moves do not add up to 100%, as a pokemon can learn four moves at a time. The data is still represented in a pie chart, as it is the standardized way to represent move usage in the Pokemon community.">Info</button></h2><svg width="350" height="350" id="piesvg1"></svg><div width="350" height="350" id="pietablediv1"></div></div>
-				<div class="col-sm-6"><h2>Items</h2><svg width="350" height="350" id="piesvg2"></svg><div width="350" height="350" id="pietablediv2"></div></div>
-			</div>
-
-			<!-- metagame header -->
+				<div class="col-sm-6">
+					<h2>Moves<button class="btn-xs btn-info" title="The moves do not add up to 100%, as a pokemon can learn four moves at a time. The data is still represented in a pie chart, as it is the standardized way to represent move usage in the Pokemon community." type="button">Info</button></h2><svg height="350" id="piesvg1" width="350"></svg>
+					<div id="pietablediv1"></div>
+				</div>
+				<div class="col-sm-6">
+					<h2>Items</h2><svg height="350" id="piesvg2" width="350"></svg>
+					<div id="pietablediv2"></div>
+				</div>
+			</div><!-- metagame header -->
 			<div class="row">
-				<div class="col-md-12"><h1>The metagame</h1></div>
-			</div>
-
-			<!-- bar chart -->
+				<div class="col-md-12">
+					<h1>The metagame</h1>
+				</div>
+			</div><!-- bar chart -->
 			<div class="row">
-				<div class="col-md-12"><h2>Frequency of types in top 20<button type="button" class="btn-xs btn-info" title="As it turns out, there are few Ice type Pokemon frequently found in competitive play. This is why you won't find any red bars in this graph.">Info</button></h2><svg width="960" height="500" id="barsvg"></svg></div>
-			</div>
-
-			<!-- table -->
+				<div class="col-md-12">
+					<h2>Frequency of types in top 20<button class="btn-xs btn-info" title="As it turns out, there are few Ice type Pokemon frequently found in competitive play. This is why you won't find any red bars in this graph." type="button">Info</button></h2><svg height="500" id="barsvg" width="960"></svg>
+				</div>
+			</div><!-- table -->
 			<div class="row">
-				<div class="col-md-12"><h2>Top 20 most common Pokemon<button type="button" class="btn-xs btn-info" title="The links will send you to a Battle Spot Doubles anyalisis of the selected pokemon. Battle Spot Doubles has the exact ruleset of VGC2015.">Info</button></h2><div width="350" height="500" id="usagetablediv"></div></div>
+				<div class="col-md-12">
+					<h2>Top 20 most common Pokemon<button class="btn-xs btn-info" title="The links will send you to a Battle Spot Doubles anyalisis of the selected pokemon. Battle Spot Doubles has the exact ruleset of VGC2015." type="button">Info</button></h2>
+					<div id="usagetablediv"></div>
+				</div>
 			</div>
 		</div>
-
 		<p>Visualisation by Casper van Velzen</p>
 		<p>Stats by <a href="https://twitter.com/InfiniteAntar">Antar</a></p>
 		<p>Data can be found on <a href="http://www.smogon.com/stats/">Smogon.com</a></p>
-	</body>
+	</div>
+</body>
 </html>
