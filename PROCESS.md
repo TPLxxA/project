@@ -135,13 +135,16 @@ Added:
 - sticky navbar (dropdown is currently broken)
 
 # Tue 30:
-Current issues:
-- dropdown does not display current selection
-
 Fixed issues:
 - slider is too small and not in position: added correct css and it's not ugly now
 - selecting a dropdown item causes the page to go back to top: removed href from list items
+- dropdown does not display current selection: changed the selection to match new navbar code
 
 Added:
 - comments to entire code
 - headers to all files
+
+# Wed 31:
+Added:
+- Pictures of Landorus-T and its base stats
+- Paragraphs of text explaining the data

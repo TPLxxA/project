@@ -1,8 +1,8 @@
 /*
-  Casper van Velzen
-  11030275
-  Minor Programmeren / Final Project
-  Adds styling to the webpage.
+Casper van Velzen
+11030275
+Minor Programmeren / Final Project
+Adds styling to the webpage.
 */
 
 .tooltip {
@@ -61,10 +61,19 @@ path:hover {
 /* Page content */
 .bodycontent {
   padding: 16px;
-  padding-top: 50px;
+  padding-top: 62px;
 }
 
 .navbar-right {
   margin-right: 20px;
   margin-top: 5px;
+}
+.infotext1 {
+  margin-top: 1em;
+  margin-left: 4px;
+}
+
+.infotext2 {
+  margin-top: 1em;
+  margin-left: 20px;  
 }

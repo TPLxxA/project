@@ -2,12 +2,12 @@
 Casper van Velzen
 11030275
 Minor Programmeren / Final Project
-Creates visualisations about the usage of Landorus-Therian in VGC 2015 and the metagame at that time
+Creates visualisations about the usage of Landorus-Therian in VGC 2015 and the metagame at that time.
 */
 
 // global variables
 var currentWeight, selectedMonth, lando0, lando1500, lando1630, lando1760, meta0, meta1500, meta1630, meta1760;
-var monthList = ["Januari", "February", "March", "April", "May", "June", "Juli", "August", "September", "October", "November", "December"];
+var monthList = ["Januari", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 window.onload = function() {
 	// load all datasets

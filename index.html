@@ -7,8 +7,6 @@ html for the visualisation about Landorus-Therian in VGC 2015.
 <!DOCTYPE html>
 <html>
 <head>
-
-	<meta name="Casper van Velzen" content="html for the visualisation about Landorus-Therian in VGC 2015.">	
 	<script charset="utf-8" src="//d3js.org/d3.v4.min.js">
 	</script>
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -32,7 +30,7 @@ html for the visualisation about Landorus-Therian in VGC 2015.
 		<nav class="navbar navbar-default navbar-fixed-top">
 			<div class="container-fluid">
 				<div class="navbar-header">
-					<button aria-controls="navbar" aria-expanded="false" class="navbar-toggle collapsed" data-target="#navbar" data-toggle="collapse" type="button"><span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button> <a class="navbar-brand" href="#">Landorus-Therian in VGC 2015</a>
+					<button aria-controls="navbar" aria-expanded="false" class="navbar-toggle collapsed" data-target="#navbar" data-toggle="collapse" type="button"><span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button> <a class="navbar-brand">Landorus-Therian in VGC 2015</a>
 				</div>
 				<div class="navbar-collapse collapse" id="navbar">
 					<ul class="nav navbar-nav">
@@ -67,6 +65,9 @@ html for the visualisation about Landorus-Therian in VGC 2015.
 
 		<!-- line chart -->
 		<div class="bodycontent">
+			<h1>Landorus-Therian in VGC 2015</h1>
+			<img src="landorus-therian.jpg" alt="Landorus-Therian" width="132" height="160"><img src="base_stats.jpg" alt="Landorus-Therian's base stats">
+			<p class="infotext1">Every year The Pokemon Company international (TPCi) release a new ruleset for official Pokemon tournaments called Video Game Championships (VGC). In every format it is legal, there is one Pokemon that rises to the top to be called "King of VGC". This is Landorus-Therian. Landorus is looking to be a top-threat once again in 2018, so it is useful to know how its usage evolved in 2015, a year with a very similar ruleset to this year's.<br>Stats used can be found on <a href="http://www.smogon.com/stats/">Smogon.com</a> and are collected on an online Pokemon battle simulator called Pokemon Showdown. Stats can be weighed on ranking, meaning higher ranked players will have more influence on the statistics.</p>
 			<div class="row">
 				<div class="col-md-12">
 					<h2>Usage stats throughout the months</h2><svg height="500" id="linesvg" width="720"></svg>
@@ -75,8 +76,10 @@ html for the visualisation about Landorus-Therian in VGC 2015.
 
 			<!-- pie charts -->
 			<div class="row">
+				<p class="infotext2">A Pokemon can learn up to four moves at a time. The most popular moves largely stayed the same throughout the months, usually Earthquake, Rock Slide and a two of Superpower, Knock off or U-turn. However, an interesting trend is visible from july onwards, namely the rise of Special attacks (Hidden Power Ice and Earth Power). Even though Landorus' Special attack stat is not nearly as impressive as its Physical attack, one Hidden Power Ice from a Landorus trained in Special attack is enough to knock out opposing Landorus that are not holding an item to increase its bulk.</p>
+				<p class="infotext2">Speaking of items, any pokemon can hold one item at a time. By far the most popular item in the first half of 2015 was the Choice Scarf, increasing the holder's speed by 50% at the cost of being unable to switch up moves (once you've used Earthquake, you won't be able to use anything else until you switch out). With the rise of different types of speed control like Thundurus' Thunder Wave (paralyses the opponent, decreasing their speed by 3/4) came the rise of Assault Vest. This item boosts the holder's Special defense by 50% while only allowing the holder to use offensive moves. Assault vest allowed Landorus to better take special hits like Hidden Power ice. Its popularity got increased further after Shoma Honami won the World Championships with Assault vest Landorus-Therian in August.</p>
 				<div class="col-sm-6">
-					<h2>Moves<button class="btn-xs btn-info" title="The moves do not add up to 100%, as a pokemon can learn four moves at a time. The data is still represented in a pie chart, as it is the standardized way to represent move usage in the Pokemon community." type="button">Info</button></h2><svg height="350" id="piesvg1" width="350"></svg>
+					<h2>Moves</h2><svg height="350" id="piesvg1" width="350"></svg>
 					<div id="pietablediv1"></div>
 				</div>
 				<div class="col-sm-6">
@@ -90,13 +93,14 @@ html for the visualisation about Landorus-Therian in VGC 2015.
 				</div>
 			</div><!-- bar chart -->
 			<div class="row">
+				<p class="infotext2">Landorus-Therian is a Ground/Flying type, meaning its only two weaknesses are Water and Ice type moves. As both Ground and Flying types are weak to Ice, Landorus takes four (!) times more damage from Ice type moves. Luckily, the metagame is kind to Landorus, as there are no Ice type Pokemon used within the top 10 at any point in time. This is mostly due to Ice type's weakness to other common Pokemon like Heatran, Aegislash and Charizard. The popularity of Charizard is a blessing for Landorus in another way. Charizard's ability sets up harsh sunlight for five turns, which halves the damage from Water type moves, essentially negating Landorus' weakness.<br>The aforementioned Thundurus and Cresselia support Landorus exceptionally well, as they can both avoid Earthquakes and acquire speed control with Thunder Wave and Icy Wind respectively.</p>
 				<div class="col-md-12">
-					<h2>Frequency of types in top 20<button class="btn-xs btn-info" title="As it turns out, there are few Ice type Pokemon frequently found in competitive play. This is why you won't find any red bars in this graph." type="button">Info</button></h2><svg height="500" id="barsvg" width="960"></svg>
+					<h2>Frequency of types in top 20</h2><svg height="500" id="barsvg" width="960"></svg>
 				</div>
 			</div><!-- table -->
 			<div class="row">
 				<div class="col-md-12">
-					<h2>Top 20 most common Pokemon<button class="btn-xs btn-info" title="The links will send you to a Battle Spot Doubles anyalisis of the selected pokemon. Battle Spot Doubles has the exact ruleset of VGC2015." type="button">Info</button></h2>
+					<h2>Top 20 most common Pokemon</h2>
 					<div id="usagetablediv"></div>
 				</div>
 			</div>
