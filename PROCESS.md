@@ -151,3 +151,6 @@ Added:
 
 Fixed issues:
 - Made a tooltip generator: made a seperate tooltip function which is only called once
+
+Çurrent issue:
+- Forum post by Antar about ranking weight might be too confusing to include, since it also covers concepts like Pokemon tier systems.
