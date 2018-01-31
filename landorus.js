@@ -6,7 +6,7 @@ Creates visualisations about the usage of Landorus-Therian in VGC 2015 and the m
 */
 
 // global variables
-var currentWeight, selectedMonth, lando0, lando1500, lando1630, lando1760, meta0, meta1500, meta1630, meta1760;
+var tip, currentWeight, selectedMonth, lando0, lando1500, lando1630, lando1760, meta0, meta1500, meta1630, meta1760;
 var monthList = ["Januari", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 window.onload = function() {
@@ -44,6 +44,7 @@ function dataLoaded(error, landoData0, landoData1500, landoData1630, landoData17
 	// call functions for interactive elements
 	dropdown();
 	slider();
+	tip();
 };
 
 function lineGraph(data) {
@@ -140,11 +141,6 @@ function pieChart(data, chartNr, chartType) {
 		.enter().append("g")
 			.attr("class", "arc");
 
-	// initiate tooltip function
-	var tip = d3.select("body").append("div")
-		.attr("class", "tooltip")
-		.style("opacity", 0);
-
 	// draw pie
 	arc.append("path")
 		.attr("d", path)
@@ -175,6 +171,13 @@ function pieChart(data, chartNr, chartType) {
 
 	// create table displaying data
 	pieTable(data[chartType], [chartType, "usage"], chartNr, chartType);
+};
+
+function tip() {
+	// initiate tooltip function
+	tip = d3.select("body").append("div")
+		.attr("class", "tooltip")
+		.style("opacity", 0);
 };
 
 function pieTable(data, columns, chartNr, chartType) {
