@@ -148,3 +148,6 @@ Added:
 Added:
 - Pictures of Landorus-T and its base stats
 - Paragraphs of text explaining the data
+
+Fixed issues:
+- Made a tooltip generator: made a seperate tooltip function which is only called once
