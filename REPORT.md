@@ -24,7 +24,7 @@ barChart creates a bar chart (duh) for the selected month and ranking weight. It
 
 usageTable is the final visualisation. It shows the top 20 most used pokemon in the selected month, with data being weighted by ranking. It doesn't call any other functions.
 
-## interactivity
+## Interactivity
 
 These three functions are initialised in dataLoaded.
 
