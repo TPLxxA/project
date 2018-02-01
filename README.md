@@ -22,3 +22,9 @@ Every year The Pokemon Company international (TPCi) release a new ruleset for of
 # Copyright
 
 All copyright belongs to the creator of this repository. Use of this repository's contents is permitted, but only with proper documentation of the source. See LICENCE.md for more details.
+
+# Used libaries
+
+- d3, including d3 queue and d3 tip
+- Bootstrap
+- Jquery
