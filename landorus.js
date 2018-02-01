@@ -9,6 +9,9 @@ Creates visualisations about the usage of Landorus-Therian in VGC 2015 and the m
 var tip, currentWeight, selectedMonth, lando0, lando1500, lando1630, lando1760, meta0, meta1500, meta1630, meta1760;
 var monthList = ["Januari", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+/*
+Loads all datasets.
+*/
 window.onload = function() {
 	// load all datasets
 	d3.queue()
@@ -23,6 +26,12 @@ window.onload = function() {
 	.await(dataLoaded);
 };
 
+/*
+Assigns loaded data to global variables.
+Initialises settings for selected month and ranking weight.
+Loads all graphs.
+Intialises functions for interactive elements.
+*/
 function dataLoaded(error, landoData0, landoData1500, landoData1630, landoData1760, metaData0, metaData1500, metaData1630, metaData1760) {
 	if (error) throw error;
 
@@ -47,6 +56,47 @@ function dataLoaded(error, landoData0, landoData1500, landoData1630, landoData17
 	tip();
 };
 
+/*
+Reads currently selected ranking weight and month.
+Then calls functions to create all graphs passing the correct arguments.
+*/
+function loadCharts(weight, selectedMonth) {
+	// update graphs using correct ranking weight and month
+	switch (weight) {
+	case "0":
+		lineGraph(lando0);
+		pieChart(lando0[selectedMonth], 1, "moves");
+		pieChart(lando0[selectedMonth], 2, "items");
+		barChart(meta0[selectedMonth]);
+		usageTable(meta0[selectedMonth], ["mon", "usage"]);
+		break;
+	case "1500":
+		lineGraph(lando1500);
+		pieChart(lando1500[selectedMonth], 1, "moves");
+		pieChart(lando1500[selectedMonth], 2, "items");
+		barChart(meta1500[selectedMonth]);
+		usageTable(meta1500[selectedMonth], ["mon", "usage"]);
+		break;
+	case "1630":
+		lineGraph(lando1630);
+		pieChart(lando1630[selectedMonth], 1, "moves");
+		pieChart(lando1630[selectedMonth], 2, "items");
+		barChart(meta1630[selectedMonth]);
+		usageTable(meta1630[selectedMonth], ["mon", "usage"]);
+		break;
+	case "1760":
+		lineGraph(lando1760);
+		pieChart(lando1760[selectedMonth], 1, "moves");
+		pieChart(lando1760[selectedMonth], 2, "items");
+		barChart(meta1760[selectedMonth]);
+		usageTable(meta1760[selectedMonth], ["mon", "usage"]);
+		break;
+	}
+};
+
+/*
+Creates a line chart using usage percentage for Landorus-Therian.
+*/
 function lineGraph(data) {
 	// remove previous line
 	d3.selectAll(".lineg")
@@ -105,6 +155,10 @@ function lineGraph(data) {
 			.attr("d", line);
 };
 
+/*
+Creates one pie chart.
+Selects either moves or items during the selected month.
+*/
 function pieChart(data, chartNr, chartType) {
 	// clear pie chart
 	d3.selectAll(".pieg" + chartNr)
@@ -173,13 +227,10 @@ function pieChart(data, chartNr, chartType) {
 	pieTable(data[chartType], [chartType, "usage"], chartNr, chartType);
 };
 
-function tip() {
-	// initiate tooltip function
-	tip = d3.select("body").append("div")
-		.attr("class", "tooltip")
-		.style("opacity", 0);
-};
-
+/*
+Creates tables under the pie charts.
+Uses the same data as pieChart.
+*/
 function pieTable(data, columns, chartNr, chartType) {
 	// clear current table
 	d3.selectAll(".pieTable" + chartNr)
@@ -240,6 +291,84 @@ function pieTable(data, columns, chartNr, chartType) {
 			.text(function (d) { return d.value; });
 };
 
+/*
+Capitalizes words.
+Credits to Steve Harrison on Stackoverflow for this function.
+*/
+function capitalize(string) {
+	return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+/*
+Appends a tooltip to the body of the page.
+*/
+function tip() {
+	// initiate tooltip function
+	tip = d3.select("body").append("div")
+		.attr("class", "tooltip")
+		.style("opacity", 0);
+};
+
+/*
+Loops over data of the given months.
+Increments the frequency counter of a type when it's encountered.
+*/
+function countTypes(data) {
+	// initiate list of types to count
+	var typedata = [{"type": "bug", "frequency": 0}, {"type": "dark", "frequency": 0}, {"type": "dragon", "frequency": 0},
+					{"type": "electric", "frequency": 0}, {"type": "fairy", "frequency": 0}, {"type": "fighting", "frequency": 0},
+					{"type": "fire", "frequency": 0}, {"type": "flying", "frequency": 0}, {"type": "ghost", "frequency": 0},
+					{"type": "grass", "frequency": 0}, {"type": "ground", "frequency": 0}, {"type": "ice", "frequency": 0},
+					{"type": "normal", "frequency": 0}, {"type": "poison", "frequency": 0}, {"type": "psychic", "frequency": 0},
+					{"type": "rock", "frequency": 0}, {"type": "steel", "frequency": 0}, {"type": "water", "frequency": 0}]
+
+	// increment correct type on every occurance in data
+	for (var key in data) {
+		for (var i in typedata) {
+			if (data[key].type1 == typedata[i].type) {
+				typedata[i].frequency += 1;
+			}
+			if (data[key].type2 == typedata[i].type) {
+				typedata[i].frequency += 1;
+			}
+		}
+	}
+
+	return typedata;
+};
+
+/*
+Decides color for a bar depending on how good or bad a single type is for Landorus.
+*/
+function pickColor(type) {
+	// default color/ neutral matchup
+	var color = "blue";
+
+	// if (dis)advantagous matchup, change color
+	switch (type) {
+		case "bug":
+		case "electric":
+		case "fighting":
+		case "fire":
+		case "poison":
+		case "rock":
+		case "steel":
+			color = "green";
+			break;
+		case "water":
+			color = "orange";
+			break;
+		case "ice":
+			color = "red";
+			break;
+	}
+
+	return color;
+};
+
+/*
+Creates a bar chart representing the frequency of different types of Pokemon in the top 20.
+*/
 function barChart(data) {
 	// remove previous bars
 	d3.selectAll(".barg")
@@ -325,6 +454,10 @@ function barChart(data) {
 		.text(function(d, i) { return legendText[i] });
 };
 
+/*
+Creates a table of the top 20 most used Pokemon and their usage percentages.
+Uses selectedMonth and current weight to select data.
+*/
 function usageTable(data, columns) {
 	// clear previous table
 	d3.selectAll(".usagetable")
@@ -365,6 +498,10 @@ function usageTable(data, columns) {
 			.text(function (d) { return d.value; });
 };
 
+/*
+Listens for a selection in the dropdown menu in the navbar.
+If activated, updates current ranking weight and calls loadCharts.
+*/
 function dropdown() {
 	// listen for click on list item
 	$(".dropdown-menu li a").click(function(){
@@ -382,8 +519,12 @@ function dropdown() {
 		// update charts with new ranking weight
 		loadCharts(currentWeight, selectedMonth);
 	});
-}
+};
 
+/*
+Listens for activation of the slider.
+If activated, updates selected month and calls loadCharts.
+*/
 function slider() {
 	// check current slider position
 	var slider = document.getElementById("range");
@@ -399,93 +540,4 @@ function slider() {
 		// update charts
 		loadCharts(currentWeight, selectedMonth);
 	}
-};
-
-function loadCharts(weight, selectedMonth) {
-	// update graphs using correct ranking weight and month
-	switch (weight) {
-	case "0":
-		lineGraph(lando0);
-		pieChart(lando0[selectedMonth], 1, "moves");
-		pieChart(lando0[selectedMonth], 2, "items");
-		barChart(meta0[selectedMonth]);
-		usageTable(meta0[selectedMonth], ["mon", "usage"]);
-		break;
-	case "1500":
-		lineGraph(lando1500);
-		pieChart(lando1500[selectedMonth], 1, "moves");
-		pieChart(lando1500[selectedMonth], 2, "items");
-		barChart(meta1500[selectedMonth]);
-		usageTable(meta1500[selectedMonth], ["mon", "usage"]);
-		break;
-	case "1630":
-		lineGraph(lando1630);
-		pieChart(lando1630[selectedMonth], 1, "moves");
-		pieChart(lando1630[selectedMonth], 2, "items");
-		barChart(meta1630[selectedMonth]);
-		usageTable(meta1630[selectedMonth], ["mon", "usage"]);
-		break;
-	case "1760":
-		lineGraph(lando1760);
-		pieChart(lando1760[selectedMonth], 1, "moves");
-		pieChart(lando1760[selectedMonth], 2, "items");
-		barChart(meta1760[selectedMonth]);
-		usageTable(meta1760[selectedMonth], ["mon", "usage"]);
-		break;
-	}
-};
-
-function countTypes(data) {
-	// initiate list of types to count
-	var typedata = [{"type": "bug", "frequency": 0}, {"type": "dark", "frequency": 0}, {"type": "dragon", "frequency": 0},
-					{"type": "electric", "frequency": 0}, {"type": "fairy", "frequency": 0}, {"type": "fighting", "frequency": 0},
-					{"type": "fire", "frequency": 0}, {"type": "flying", "frequency": 0}, {"type": "ghost", "frequency": 0},
-					{"type": "grass", "frequency": 0}, {"type": "ground", "frequency": 0}, {"type": "ice", "frequency": 0},
-					{"type": "normal", "frequency": 0}, {"type": "poison", "frequency": 0}, {"type": "psychic", "frequency": 0},
-					{"type": "rock", "frequency": 0}, {"type": "steel", "frequency": 0}, {"type": "water", "frequency": 0}]
-
-	// increment correct type on every occurance in data
-	for (var key in data) {
-		for (var i in typedata) {
-			if (data[key].type1 == typedata[i].type) {
-				typedata[i].frequency += 1;
-			}
-			if (data[key].type2 == typedata[i].type) {
-				typedata[i].frequency += 1;
-			}
-		}
-	}
-
-	return typedata;
-};
-
-function pickColor(type) {
-	// default color/ neutral matchup
-	var color = "blue";
-
-	// if (dis)advantagous matchup, change color
-	switch (type) {
-		case "bug":
-		case "electric":
-		case "fighting":
-		case "fire":
-		case "poison":
-		case "rock":
-		case "steel":
-			color = "green";
-			break;
-		case "water":
-			color = "orange";
-			break;
-		case "ice":
-			color = "red";
-			break;
-	}
-
-	return color;
-};
-
-// credits to Steve Harrison on Stackoverflow for this function
-function capitalize(string) {
-	return string.charAt(0).toUpperCase() + string.slice(1);
 };
